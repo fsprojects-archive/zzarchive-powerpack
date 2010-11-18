@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <FSharpPowerPackSourcesRoot>..</FSharpPowerPackSourcesRoot>
+    <ProjectGuid>{476e2850-fce3-48bd-b14d-c0bd1e8dc529}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(FSharpPowerPackSourcesRoot)\FSharpPowerPackSource.Settings.targets" />
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <SchemaVersion>2.0</SchemaVersion>
+    <AllowCrossTargeting>true</AllowCrossTargeting>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <DocumentationFile>FSharp.PowerPack.Plot.Xceed.xml</DocumentationFile>
+  </PropertyGroup>
+  <!-- These dummy entries are needed for F# Beta2 -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\assemblyinfo.Common.fs">
+      <Link>assemblyinfo.Common.fs</Link>
+    </Compile>    
+    <Compile Include="xceed.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="FSharp.Core" />
+    <Reference Include="Xceed.Chart">
+      <Name>Xceed.Chart</Name>
+      <AssemblyName>Xceed.Chart.dll</AssemblyName>
+      <HintPath>$(FSharpPowerPackSourcesRoot)\..\tools\Xceed\Bin\.NET\Xceed.Chart.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Chart.Core">
+      <Name>Xceed.Chart.Core</Name>
+      <AssemblyName>Xceed.Chart.Core.dll</AssemblyName>
+      <HintPath>$(FSharpPowerPackSourcesRoot)\..\tools\Xceed\Bin\.NET\Xceed.Chart.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Chart.Graphics2D">
+      <Name>Xceed.Chart.Graphics2D</Name>
+      <AssemblyName>Xceed.Chart.Graphics2D.dll</AssemblyName>
+      <HintPath>$(FSharpPowerPackSourcesRoot)\..\tools\Xceed\Bin\.NET\Xceed.Chart.Graphics2D.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Chart.GraphicsCore">
+      <Name>Xceed.Chart.GraphicsCore</Name>
+      <AssemblyName>Xceed.Chart.GraphicsCore.dll</AssemblyName>
+      <HintPath>$(FSharpPowerPackSourcesRoot)\..\tools\Xceed\Bin\.NET\Xceed.Chart.GraphicsCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Chart.GraphicsGL">
+      <Name>Xceed.Chart.GraphicsGL</Name>
+      <AssemblyName>Xceed.Chart.GraphicsGL.dll</AssemblyName>
+      <HintPath>$(FSharpPowerPackSourcesRoot)\..\tools\Xceed\Bin\.NET\Xceed.Chart.GraphicsGL.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Chart.Standard">
+      <Name>Xceed.Chart.Standard</Name>
+      <AssemblyName>Xceed.Chart.Standard.dll</AssemblyName>
+      <HintPath>$(FSharpPowerPackSourcesRoot)\..\tools\Xceed\Bin\.NET\Xceed.Chart.Standard.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Chart.UIControls">
+      <Name>Xceed.Chart.UIControls</Name>
+      <AssemblyName>Xceed.Chart.UIControls.dll</AssemblyName>
+      <HintPath>$(FSharpPowerPackSourcesRoot)\..\tools\Xceed\Bin\.NET\Xceed.Chart.UIControls.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Chart.Utilities">
+      <Name>Xceed.Chart.Utilities</Name>
+      <AssemblyName>Xceed.Chart.Utilities.dll</AssemblyName>
+      <HintPath>$(FSharpPowerPackSourcesRoot)\..\tools\Xceed\Bin\.NET\Xceed.Chart.Utilities.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\charting\FSharp.PowerPack.Plot.fsproj">
+      <Name>FSharp.PowerPack.Plot</Name>
+      <Project>{a05c919c-6e80-4dcb-81b5-a12295959386}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\charting\FSharp.PowerPack.Plot.Neutral.fsproj">
+      <Name>FSharp.PowerPack.Plot.Neutral</Name>
+      <Project>{9d35e207-2184-42b8-9e1f-c6e7d906fcd7}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(FSharpPowerPackSourcesRoot)\FSharpPowerPackSource.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="!Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition="Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+</Project>

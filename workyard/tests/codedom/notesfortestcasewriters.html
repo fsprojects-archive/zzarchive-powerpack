@@ -1,0 +1,191 @@
+<html>
+<style>
+    body {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+    h1,h2,h3 {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    p.optdesc {
+        margin-left: 2em;
+    }
+    div.usagescenario {
+        margin-top: 2em;
+        padding: 0.5em 1em 0.5em 1em;
+        border: solid 1px black;
+        background-color: #eee;
+    }
+    .note {
+        padding: 0.5em 1em 0.5em 1em;
+        border: dashed 2px red;
+        background-color: #ecc;
+    }
+    a {
+        color: #666;
+    }
+    a:visited {
+        color: #333;
+    }
+    table#testdesc {
+        font-size: 10pt;
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        border: solid 2px black;
+    }
+    table#testdesc th {
+        text-align: left;
+        border-right: solid 1px black;
+    }
+    table#testdesc td {
+        padding: 0.2em 1em 0.2em 0.2em;
+        margin: 0 0 0 0;
+        border-right: solid 1px black;
+    }
+
+    table#testdesc .cls_subset {
+        background-color: #6c9;
+    }
+
+    table#testdesc .cls_everett {
+        background-color: #69c;
+    }
+
+    table#testdesc .cls_whidbey {
+        background-color: #cc9;
+    }
+
+    code.type {
+        font-family: monospace;
+        color: blue;
+    }
+</style>
+<head><title>CodeDom Test Suite Readme</title></head>
+<body>
+
+<h1>Writing Test Cases for the CodeDom Test Suite</h1>
+Copyright (C) Microsoft Corp. 2004.  All rights reserved.
+
+<h2>Introduction</h2>
+
+<p style="color: red">Test suite <b>users</b> may want to refer to the
+<a href="README.html">CodeDom Test Suite Readme</a>
+document also located in this collection.  This document is for
+those who want to extend the test suite with their own test cases.</p>
+
+<p>
+The CodeDom test suite allows you to write and build test cases independent
+of the ones provided with the test suite.  These test cases all must derive
+from the class <code>CodeDomTest</code> (or its subtypes) located in
+<code>CodeDomTest.dll</code>.  This class provides the test suite a single
+interface with which to call and handle your test.  There is a subtype
+of <code>CodeDomTest</code>, namely <code>CodeDomTestTree</code>, that takes
+care of more details for you.  The differences between the two are described
+below.
+</p>
+
+<h2>Writing a Test Case</h2>
+
+<p class="note">Note in order to take advantage of the passed in options:
+saveassemblies and savesources, you must override CodeDomTestTree.</p>
+
+<p>The <code>CodeDomTest</code> class requires you to override the following
+properties and methods:</p>
+
+<ul>
+    <li><code class="type">TestTypes</code> TestType
+    <p>
+    Should return one of the following values from the <code class="type">TestTypes</code>
+    enum: <code class="identifier">Subset</code>, <code class="identifier">Everett</code>,
+    <code class="identifier">Whidbey</code>.  Refer to the <a href="README.html">readme</a>
+    for more information about these classifications.
+    </p>
+
+    <li><code class="type">string</code> Name
+    <p>
+    Returns the name of the test.  If you compile many tests into a single assembly,
+    the names should be unique otherwise the test suite will detect multiple names
+    and abort any test runs.
+    </p>
+
+    <li><code class="type">string</code> Description
+    <p>
+    Returns a short description of the test.  It is recommended that this be no longer
+    than one or two lines on the console window.
+    </p>
+
+    <li><code class="type">bool</code> Run (<code class="type">CodeDomProvider</code> provider)
+    <p>
+    This method does all the testing on the given provider.  The
+    <code class="type">CodeDomTestTree</code> implements this for you.  Returning
+    <code class="identifier">true</code> from this method signifies a test case pass.
+    <code class="identifier">false</code> signifies a fail.
+    </p>
+</ul>
+
+<h2>Using <code class="identifier">CodeDomTestTree</code></h2>
+
+<p>Many CodeDom provider tests do the same kind of verification test.  That is they:</p>
+
+<ol>
+    <li>Build a CodeDom tree,
+    <li>Generate and compile code from it using the provider,
+    <li>then verify it using reflection or some other mechanism.
+</ol>
+
+<p>The <code class="identifier">CodeDomTestTree</code> automates these three steps
+allowing you to focus on writing the test tree and verification.  It also provides
+sub-scenario verification.</p>
+
+<p>With these steps in mind, if you override <code class="identifier">CodeDomTestTree</code>, the
+following methods should be implemented (note that you must still implement
+the three TestType, Name and Description properties):</p>
+
+<ul>
+    <li><code class="type">bool</code> ShouldCompile
+    <p>
+    Signifies whether or not the generated CodeDom tree (from BuildTree) should compile.
+    </p>
+
+    <li><code class="type">bool</code> ShouldVerify
+    <p>
+    Signifies whether or not the compiled code from your CodeDom tree should be verified.
+    </p>
+
+    <li><code class="type">bool</code> ShouldSearch
+    <p>
+    Signifies whether or not the generated code from your CodeDom tree should be searched using
+    the provided <code class="identifier">Search</code> function.
+    </p>
+
+    <li><code class="type">void</code> BuildTree (<code class="type">CodeDomProvider</code> provider,
+    <code class="type">CodeCompileUnit</code> cu)
+    <p>
+        Takes the given provider and generates a tree in the given CodeCompileUnit.
+        This is where the bulk of your test case should reside.  You may use AddScenario()
+    </p>
+
+    <li><code class="type">void</code> VerifyAssembly (<code class="type">CodeDomProvider</code> provider,
+    <code class="type">Assembly</code> builtAssembly)
+    <p>
+        Runs verification of the compiled source code emitted by the provider.  The
+        source code is generated from the tree you built in BuildTree().  You should
+        use VerifyScenario() to verify any scenarios defined in BuildTree().  You may
+        also add new scenarios as long as they are also verified by the end of
+        VerifyAssembly()'s execution.  Refer to the accompanying documentation for
+        more information on how to write a test case.
+    </p>
+
+    <li><code class="type">void</code> Search (<code class="type">CodeDomProvider</code> provider
+    <code class="type">string</code> source)
+    <p>
+        Searches the given code output as you define.  The given string will
+        be the source code emitted by the given provider that was generated
+        from the tree defined in BuildTree().  You should use VerifyScenario()
+        as in VerifyAssembly() to match any successful scenarios.
+    </p>
+</ul>
+
+</body>
+</html>
+

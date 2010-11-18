@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <FSharpPowerPackSourcesRoot>..</FSharpPowerPackSourcesRoot>
+    <TOOLS Condition=" '$(TOOLS)' == '' ">&gt;..\..\tools</TOOLS>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+  <Import Project="$(FSharpPowerPackSourcesRoot)\FSharpPowerPackSource.Settings.targets" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E2A0F944-E76E-4C53-B037-A050FDF7378A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>FSharp.PowerPack.Unittests</RootNamespace>
+    <AssemblyName>FSharp.PowerPack.Unittests</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StrongName>false</StrongName>
+    <!--->ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB}</ProjectTypeGuids-->
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>62</NoWarn>
+    <OtherFlags>--mlcompatibility</OtherFlags>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>62</NoWarn>
+    <OtherFlags>--mlcompatibility</OtherFlags>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Condition="'$(TargetFramework)' == 'Silverlight'" Include="NUnitFrameworkShims.fs" />    
+    <Compile Include="Utilities.fs" />
+    <Compile Include="HashtblTests.fs" />
+    <Compile Include="MatrixVectorTests.fs" />
+    <Compile Include="LazyListTests.fs" />
+    <Compile Include="CompatTests.fs" />
+    <Compile Include="ColllectionTests.fs" />
+    <Compile Include="ControlTests.fs" />
+    <Compile Include="SetMapTests.fs" />
+    <Compile Include="PermutationTests.fs" />
+    <Compile Condition="'$(TargetFramework)' == ''" Include="NativeArrayTests.fs" />
+    <Compile Include="BigRationalTests.fs" />
+    <Compile Include="QuotationEvalTests.fs" />
+    <Compile Include="StructuredFormatTests.fs" />
+    <Compile Condition="'$(TargetFramework)' == ''" Include="MetadataTests.fs" />
+    <Compile Condition="'$(TargetFramework)' == ''" Include="QueryTests.fs" />
+    <Compile Include="AsyncStreamReaderTest.fs" />
+    <Compile Condition="'$(TargetFramework)' == ''" Include="ASP.NET\AspNetTester.fs">
+      <Link>AspNetTester.fs</Link>
+    </Compile>
+    <None Include="blas.dll" />
+    <None Include="LAPACK.dll" />
+    <None Condition="'$(TargetFramework)' == ''" Include="NORTHWND.MDF">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(FSharpPowerPackSourcesRoot)\FSharpPowerPackSource.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="!Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition="Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+  <Import Condition="'$(TargetFramework)'=='Silverlight'" Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.Common.targets"/>
+  <ItemGroup>    
+    <Reference Condition="'$(TargetFramework)' == ''" Include="northwnd">
+      <HintPath>northwnd.dll</HintPath>
+    </Reference>
+    <Reference Condition="'$(TargetFramework)' == ''" Include="nunit.framework">
+      <HintPath>$(TOOLS)\NUnit\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />    
+    <Reference Include="System" />
+    <Reference Include="System.Core"/>
+    <Reference Condition="'$(TargetFramework)' == ''" Include="System.Data" />
+    <Reference Condition="'$(TargetFramework)' == ''" Include="System.Data.Linq" />
+    <Reference Condition="'$(TargetFramework)' == ''" Include="System.Drawing" />
+    <Reference Condition="'$(TargetFramework)' == ''" Include="System.Windows.Forms" />
+    <ProjectReference Condition="'$(TargetFramework)' == ''"  Include="..\FSharp.Compiler.CodeDom\Fsharp.Compiler.CodeDom.fsproj">
+      <Project>{9EF49218-FD64-43A8-922B-84B1FF576773}</Project>
+      <Name>Fsharp.Compiler.CodeDom</Name>
+    </ProjectReference>
+    <ProjectReference Condition="'$(TargetFramework)' == ''"  Include="..\FSharp.PowerPack.Build.Tasks\FSharp.PowerPack.Build.Tasks.fsproj">
+      <Project>{A9566921-4193-4EC8-83FB-F5A0DC257678}</Project>
+      <Name>FSharp.PowerPack.Build.Tasks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FSharp.PowerPack.Compatibility\FSharp.PowerPack.Compatibility.fsproj">
+      <Name>FSharp.PowerPack.Compatibility</Name>
+      <Project>{6fc3b299-23cb-4098-998d-06c014431807}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\FSharp.PowerPack.Linq\FSharp.PowerPack.Linq.fsproj">
+      <Project>{4C2ED03B-5ACE-427B-8285-AD333E60F35E}</Project>
+      <Name>FSharp.PowerPack.Linq</Name>
+    </ProjectReference>
+    <ProjectReference Condition="'$(TargetFramework)' == ''"  Include="..\FSharp.PowerPack.Metadata\FSharp.PowerPack.Metadata.fsproj">
+      <Project>{816CB737-0648-4889-8662-54484D42824D}</Project>
+      <Name>FSharp.PowerPack.Metadata</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FSharp.PowerPack\FSharp.PowerPack.fsproj">
+      <Project>{649FA588-F02E-457C-9FCF-87E46407481F}</Project>
+      <Name>FSharp.PowerPack</Name>
+    </ProjectReference>
+    <ProjectReference Condition="'$(TargetFramework)' == ''"  Include="..\FsHtmlDoc\FsHtmlDoc.fsproj">
+      <Project>{09C71C41-9A24-4842-96F7-9ED5D5E0DF3C}</Project>
+      <Name>FsHtmlDoc</Name>
+    </ProjectReference>
+    <ProjectReference Condition="'$(TargetFramework)' == ''"  Include="..\FsLex\FsLex.fsproj">
+      <Project>{BD2284A5-AA4D-442D-B4FB-E43B2FE9DD2A}</Project>
+      <Name>FsLex</Name>
+    </ProjectReference>
+    <ProjectReference Condition="'$(TargetFramework)' == ''"  Include="..\FsYacc\FsYacc.fsproj">
+      <Project>{DDD90630-1CDA-4CB3-9A0A-6A1253478C2D}</Project>
+      <Name>FsYacc</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

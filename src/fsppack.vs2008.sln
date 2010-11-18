@@ -1,0 +1,86 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D78E3B57-DAD1-4FE1-9DC8-84F7847B0C77}"
+	ProjectSection(SolutionItems) = preProject
+		setup\alternative-install-vs2008.bat = setup\alternative-install-vs2008.bat
+		fsppack-build.proj = fsppack-build.proj
+		..\Makefile = ..\Makefile
+		wix\product.wxs = wix\product.wxs
+		wix\script.fsx = wix\script.fsx
+		source-build-version = source-build-version
+		version = version
+		version-redirect = version-redirect
+	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.PowerPack", "FSharp.PowerPack\FSharp.PowerPack.fsproj", "{649FA588-F02E-457C-9FCF-87E46407481F}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.Compiler.CodeDom", "FSharp.Compiler.CodeDom\FSharp.Compiler.CodeDom.fsproj", "{9EF49218-FD64-43A8-922B-84B1FF576773}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsLex", "FsLex\FsLex.fsproj", "{BD2284A5-AA4D-442D-B4FB-E43B2FE9DD2A}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsYacc", "FsYacc\FsYacc.fsproj", "{DDD90630-1CDA-4CB3-9A0A-6A1253478C2D}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.PowerPack.Linq", "FSharp.PowerPack.Linq\FSharp.PowerPack.Linq.fsproj", "{4C2ED03B-5ACE-427B-8285-AD333E60F35E}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.PowerPack.Metadata", "FSharp.PowerPack.Metadata\FSharp.PowerPack.Metadata.fsproj", "{816CB737-0648-4889-8662-54484D42824D}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsHtmlDoc", "FsHtmlDoc\FsHtmlDoc.fsproj", "{09C71C41-9A24-4842-96F7-9ED5D5E0DF3C}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.PowerPack.Build.Tasks", "FSharp.PowerPack.Build.Tasks\FSharp.PowerPack.Build.Tasks.fsproj", "{A9566921-4193-4EC8-83FB-F5A0DC257678}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.PowerPack.Unittests", "FSharp.PowerPack.Unittests\FSharp.PowerPack.Unittests.fsproj", "{E2A0F944-E76E-4C53-B037-A050FDF7378A}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.PowerPack.Compatibility", "FSharp.PowerPack.Compatibility\FSharp.PowerPack.Compatibility.fsproj", "{6FC3B299-23CB-4098-998D-06C014431807}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{649FA588-F02E-457C-9FCF-87E46407481F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{649FA588-F02E-457C-9FCF-87E46407481F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{649FA588-F02E-457C-9FCF-87E46407481F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{649FA588-F02E-457C-9FCF-87E46407481F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EF49218-FD64-43A8-922B-84B1FF576773}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EF49218-FD64-43A8-922B-84B1FF576773}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EF49218-FD64-43A8-922B-84B1FF576773}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EF49218-FD64-43A8-922B-84B1FF576773}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD2284A5-AA4D-442D-B4FB-E43B2FE9DD2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD2284A5-AA4D-442D-B4FB-E43B2FE9DD2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD2284A5-AA4D-442D-B4FB-E43B2FE9DD2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD2284A5-AA4D-442D-B4FB-E43B2FE9DD2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDD90630-1CDA-4CB3-9A0A-6A1253478C2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDD90630-1CDA-4CB3-9A0A-6A1253478C2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDD90630-1CDA-4CB3-9A0A-6A1253478C2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDD90630-1CDA-4CB3-9A0A-6A1253478C2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C2ED03B-5ACE-427B-8285-AD333E60F35E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C2ED03B-5ACE-427B-8285-AD333E60F35E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C2ED03B-5ACE-427B-8285-AD333E60F35E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C2ED03B-5ACE-427B-8285-AD333E60F35E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{816CB737-0648-4889-8662-54484D42824D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{816CB737-0648-4889-8662-54484D42824D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{816CB737-0648-4889-8662-54484D42824D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{816CB737-0648-4889-8662-54484D42824D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09C71C41-9A24-4842-96F7-9ED5D5E0DF3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09C71C41-9A24-4842-96F7-9ED5D5E0DF3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09C71C41-9A24-4842-96F7-9ED5D5E0DF3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09C71C41-9A24-4842-96F7-9ED5D5E0DF3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9566921-4193-4EC8-83FB-F5A0DC257678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9566921-4193-4EC8-83FB-F5A0DC257678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9566921-4193-4EC8-83FB-F5A0DC257678}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9566921-4193-4EC8-83FB-F5A0DC257678}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2A0F944-E76E-4C53-B037-A050FDF7378A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2A0F944-E76E-4C53-B037-A050FDF7378A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2A0F944-E76E-4C53-B037-A050FDF7378A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2A0F944-E76E-4C53-B037-A050FDF7378A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FC3B299-23CB-4098-998D-06C014431807}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FC3B299-23CB-4098-998D-06C014431807}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FC3B299-23CB-4098-998D-06C014431807}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FC3B299-23CB-4098-998D-06C014431807}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

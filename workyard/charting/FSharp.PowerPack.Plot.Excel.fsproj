@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <FSharpPowerPackSourcesRoot>..</FSharpPowerPackSourcesRoot>
+    <ProjectGuid>{c01bdd2f-e2e3-41ac-9bbf-a7e640b341f7}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(FSharpPowerPackSourcesRoot)\FSharpPowerPackSource.Settings.targets" />
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <SchemaVersion>2.0</SchemaVersion>
+    <AllowCrossTargeting>true</AllowCrossTargeting>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <DocumentationFile>FSharp.PowerPack.Plot.Excel.xml</DocumentationFile>
+  </PropertyGroup>
+  <!-- These dummy entries are needed for F# Beta2 -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\assemblyinfo.Common.fs">
+      <Link>assemblyinfo.Common.fs</Link>
+    </Compile>
+    <Compile Include="excel.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="Microsoft.Office.Interop.Excel.dll" />
+    <Reference Include="Microsoft.Office.Interop.Owc11.dll" />
+    <ProjectReference Include="FSharp.PowerPack.Plot.fsproj">
+      <Name>FSharp.PowerPack.Plot</Name>
+      <Project>{6196b0f8-caea-4cf1-af82-1b520f77fe44}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="FSharp.PowerPack.Plot.Neutral.fsproj">
+      <Name>FSharp.PowerPack.Plot.Neutral</Name>
+      <Project>{6196b0f8-caea-4cf1-af82-1b520f77fe44}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <Reference Include="FSharp.Core" />
+  </ItemGroup>
+  <Import Project="$(FSharpPowerPackSourcesRoot)\FSharpPowerPackSource.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="!Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition="Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+</Project>

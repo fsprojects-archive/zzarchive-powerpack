@@ -1,0 +1,232 @@
+<?xml version='1.0'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <Product Id='0462F21C-5C36-4494-B00F-847362519840'
+           Name='F# Power Pack, Version 2.0.0.1'
+           Language='1033'
+           Version='2.0.0.1'
+           UpgradeCode='FF39AC9F-A471-4DDA-BB96-847362519841'
+           Manufacturer='Microsoft Corporation'>
+    <Package Id='*'
+              Description='F# Power Pack 2.0.0.1 Installer package'
+              Comments='See http://codeplex/fsharppowerpack/ for details.'
+              Manufacturer='Microsoft Corporation'
+              InstallerVersion='200'
+              Compressed='yes' />
+    <!-- import from WixVsExtension -->
+    <PropertyRef Id="VS90DEVENV" />
+    <!-- 
+    <PropertyRef Id="VS90_ITEMTEMPLATES_DIR" />
+    <PropertyRef Id="VS90_PROJECTTEMPLATES_DIR" />
+    <PropertyRef Id="VS90_ROOT_FOLDER" />
+    <CustomActionRef Id="VS90Setup" />
+-->
+    <Media Id='1' Cabinet='FSCAB.cab' EmbedCab='yes' />
+    <!-- Media Id='2' Cabinet='VCCRT.cab' EmbedCab='yes' /-->
+
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id='ProgramFilesFolder' Name='PFiles' FileSource='.' SourceName='.'>
+        <Directory Id='INSTALLDIR' Name='FSharpPowerPack-2.0.0.0' FileSource='.' SourceName='.'>
+          <Component Id='FSharp.InstallLocation' Guid='5c462ddc-ac10-4d99-af6f-847362519842'>
+            <RegistryValue Root='HKLM' Key='Software\Microsoft\.NETFramework\AssemblyFolders\FSharp.PowerPack-2.0.0.0' Type='string' Value='[INSTALLDIR]\bin' KeyPath='no' />
+            <RegistryValue Root='HKLM' Key='Software\Microsoft\.NETFramework\AssemblyFolders\FSharp.PowerPack-2.0.0.0' Name='Description' Type='string' Value='FSharp Power Pack Assembly Directory' KeyPath='no' />
+            <RegistryValue Root='HKLM' Key='Software\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\FSharp.PowerPack-2.0.0.0' Type='string' Value='[INSTALLDIR]\bin' KeyPath='no' />
+            <RegistryValue Root='HKLM' Key='Software\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\FSharp.PowerPack-2.0.0.0' Name='Description' Type='string' Value='FSharp Power Pack Assembly Directory' KeyPath='no' />
+            <RegistryValue Root='HKLM' Key='Software\Microsoft\Microsoft SDKs\Silverlight\v3.0\AssemblyFoldersEx\FSharp.PowerPack' Type='string' Value='[INSTALLDIR]\Silverlight\v3.0' KeyPath='no' />
+            <RegistryValue Root='HKLM' Key='Software\Microsoft\Microsoft SDKs\Silverlight\v4.0\AssemblyFoldersEx\FSharp.PowerPack' Type='string' Value='[INSTALLDIR]\Silverlight\v4.0' KeyPath='no' />
+          </Component>
+          <Component Id='SafeImports' Guid='F7FB257C-9AAF-47A0-9CA8-847362519843' >
+            <RegistryValue Root='HKLM' Key='Software\Microsoft\VisualStudio\9.0\MSBuild\SafeImports' Name='FSharp-1.0-PowerPack' Type='string' Value='%ProgramFiles%\MSBuild\FSharp\1.0\FSharp.PowerPack.targets' KeyPath='no' />
+          </Component>
+        </Directory><!-- INSTALLDIR -->
+        <Directory Id='MSBuildExtensionsDir' Name='MSBuild'>
+          <Directory Id='MSBuildExtensionsDirFS' Name='FSharp'>
+            <Directory Id='MSBuildExtensionsDirFSVersion' Name='1.0'>
+              <Component Id='MSBuild' Guid='6ECAFBBB-299A-41FA-8D82-847362519845'>
+                <File Id='PowerPackMSBuildTargets' Name='FSharp.PowerPack.targets' DiskId='1' Source='.\bin\FSharp.PowerPack.targets' Vital='yes' />
+                <File Id='PowerPackMSBuildTask' Name='FSharp.PowerPack.Build.Tasks.dll' DiskId='1' Source='.\bin\FSharp.PowerPack.Build.Tasks.dll' Vital='yes' />
+              </Component>
+            </Directory><!-- 1.0 -->
+          </Directory><!-- FSharp -->
+        </Directory><!-- MSBuild -->
+      </Directory><!-- Prog Files -->
+<!-- ADD THIS TO INSTALL PROGRAM MENU SHORTCUT ENTRIES
+      <Directory Id='ProgramMenuFolder' Name='Programs'>
+        <Directory Id='FSharpMenu' Name='Microsoft F# CTP 2.0.0.0' >
+          <Component Id='FSharp.Shortcuts' Guid='800A6461-2538-41f0-BC8E-203AAF97EE28'>
+            <RegistryValue Root='HKCU' Key='Software\Microsoft Research\FSharp\2.0.0.0\KeyPath.Shortcuts' Type='string' Value='1' KeyPath='yes' />
+            <CreateFolder />
+            <RemoveFolder Id='FSharp.Menu.Remove' On='uninstall' />
+          </Component>
+        </Directory>
+      </Directory>
+-->
+      <!-- ADD THIS TO INSTALL VS PROJECT TEMPLATES
+      <Directory Id='VS90_PROJECTTEMPLATES_DIR' Name='Vs2008ProjTemplates'>
+        <Directory Id='FSTemplates' Name='FSharp' FileSource='.' SourceName='.'>
+          <Component Id='ProjectTemplates' Guid='77D9683F-82E4-422A-A3CD-847362519846'>
+            <File Id='ProjTemplate1' Name='ConsoleApplication.zip' DiskId='1' Source='.\bin\Templates\ProjectTemplates\ConsoleApplication.zip' Vital='yes' />
+            <File Id='ProjTemplate2' Name='Library.zip' DiskId='1' Source='.\bin\Templates\ProjectTemplates\Library.zip' Vital='yes' />
+            <File Id='ProjTemplate3' Name='Tutorial.zip' DiskId='1' Source='.\bin\Templates\ProjectTemplates\Tutorial.zip' Vital='yes' />
+            </Component>
+          </Directory>
+        </Directory>
+-->
+      <!-- ADD THIS TO INSTALL VS ITEM TEMPLATES
+      <Directory Id='VS90_ITEMTEMPLATES_DIR' Name='Vs2008ItemTemplates'>
+        <Directory Id='FSItemTemplates' Name='FSharp' FileSource='.' SourceName='.'>
+          <Component Id='ItemTemplates' Guid='2FE31519-FEF0-422e-B0ED-847362519847'>
+            <File Id='ItemTemplate1' Name='CodeFile.zip' DiskId='1' Source='.\bin\Templates\ItemTemplates\CodeFile.zip' Vital='yes' />
+            <File Id='ItemTemplate2' Name='SignatureFile.zip' DiskId='1' Source='.\bin\Templates\ItemTemplates\SignatureFile.zip' Vital='yes' />
+            <File Id='ItemTemplate3' Name='ScriptFile.zip' DiskId='1' Source='.\bin\Templates\ItemTemplates\ScriptFile.zip' Vital='yes' />
+          </Component>
+        </Directory>
+      </Directory>
+-->
+<!-- ADD THIS TO INSTALL VS SCRIPT ITEMS
+      <Directory Id='VS90_ROOT_FOLDER' Name='Vs2008Root'>
+        <Directory Id='Common7' Name='Common7' FileSource='.' SourceName='.'>
+          <Directory Id='IDE' Name='IDE' FileSource='.' SourceName='.'>
+            <Directory Id='NewScriptItems' Name='NewScriptItems' FileSource='.' SourceName='.'>
+              <Component Id='NewScriptItems' Guid='983077B0-7203-4d4e-AAB5-847362519848'>
+                <File Id='FileTemplate1' Name='Script.fsx' DiskId='1' Source='.\bin\Templates\FileTemplates\Script.fsx' Vital='yes' />
+                <File Id='FileTemplate2' Name='NewFSharpScriptItems.vsdir' DiskId='1' Source='.\bin\Templates\FileTemplates\NewFSharpScriptItems.vsdir' Vital='yes' />
+              </Component>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+-->
+    </Directory><!-- TARGETDIR -->
+
+    <UI>
+      <InstallUISequence>
+      </InstallUISequence>
+    </UI>
+
+    <!-- Require .NET 2.0 (i.e. 2.0, 3.0 or 3.5) to be prior installed (.NET 4.0 alone is not enough) -->
+    <Condition Message='.NET Framework 2.0 must be installed prior to installation of this F# product.'>
+      FRAMEWORK20 = "50727-50727"
+    </Condition>
+
+    <Property Id="FRAMEWORK10">
+      <RegistrySearch Id='Framework10Registry' Type='raw'  Root='HKLM' Key='Software\Microsoft\.NETFramework\policy\v1.0' Name='3705' />
+    </Property>
+
+    <Property Id='FRAMEWORK20'>
+      <RegistrySearch Id='Framework20Registry' Type='raw' Root='HKLM' Key='Software\Microsoft\.NETFramework\Policy\v2.0' Name='50727' />
+    </Property>
+    
+    <Feature Id='Complete' Title='Complete features' Description='Complete features'
+             Display='expand' Level='1' ConfigurableDirectory='INSTALLDIR'>
+
+      <Feature Id='CoreFilesFeature1' Title='Install F# distribution'
+               Description='You need this. It copies the distribution to Program Files.' Level='1'>
+        <ComponentGroupRef Id='CoreFiles1ComponentGroup' />
+      </Feature>
+
+      <Feature Id='CoreFilesFeature2' Title='Install F# distribution files for .NET 2.0'
+               Description='Copy the .NET 2.0 relevant files to Program Files.' Level='1'>
+        <!-- note, feature level is 0 meaning off unless condition enables it -->
+        <Condition Level='0'>
+          NOT (FRAMEWORK20 = "50727-50727")
+        </Condition>
+        <ComponentGroupRef Id='CoreFiles2ComponentGroup' />
+<!--        <ComponentRef Id='FSharp.FSI.FileAssociations' />        -->
+      </Feature>
+
+      <Feature Id='GACFilesFeature2' Title='Install GAC DLLs for .NET 2.0'
+               Description='Install DLLs in the GAC for .NET 2.0.' Level='1'>
+        <Condition Level='0'>
+          NOT (FRAMEWORK20 = "50727-50727")
+        </Condition>
+        <ComponentGroupRef Id='GACFiles2ComponentGroup' />
+      </Feature>
+
+      <Feature Id='MSBuildFeature' Title='Install DLLs for MSBuild'
+                Description='Install DLLs for MSBuild' Level='1'>
+        <Condition Level='0'>
+          NOT (FRAMEWORK20 = "50727-50727")
+        </Condition>
+        <ComponentRef Id='SafeImports' />
+        <ComponentRef Id='MSBuild' />
+      </Feature>
+
+      <!--
+      <Feature Id='ProjectSystemFeature' Title='Install Registry Key'
+               Description='Install Registry Key.' Level='1'>
+        <Condition Level='0'>
+          NOT (VS90DEVENV)
+        </Condition>
+        <ComponentRef Id='InstalledProduct' />
+      </Feature>
+      
+      <Feature Id='ProjectTemplatesFeature' Title='Install VS Project Templates'
+               Description='Install Visual Studio Project Templates' Level='1'>
+        <Condition Level='0'>
+          NOT (VS90DEVENV)
+        </Condition>
+        <ComponentRef Id='ProjectTemplates' />
+      </Feature>
+-->
+<!--
+      
+      <Feature Id='ItemTemplatesFeature' Title='Install VS Item Templates'
+               Description='Install Visual Studio Item Templates' Level='1'>
+        <Condition Level='0'>
+          NOT (VS90DEVENV)
+        </Condition>
+        <ComponentRef Id='ItemTemplates' />
+      </Feature>
+-->
+      <!--
+      <Feature Id='NewScriptTemplatesFeature' Title='Install VS New File Templates'
+               Description='Install Visual Studio New File Templates' Level='1'>
+        <Condition Level='0'>
+          NOT (VS90DEVENV)
+        </Condition>
+        <ComponentRef Id='NewScriptItems' />
+      </Feature>
+-->
+      
+<!-- ADD THIS TO INSTALL PROGRAM MENU SHORTCUT ENTRIES
+      <Feature Id='Shortcuts' Title='Start menu shortcuts'
+               Description='Adds shortcuts to README, samples and documentation.' Level='1'>
+        <ComponentRef Id='FSharp.Shortcuts' />
+      </Feature>
+-->
+
+      <!-- TODO below is not quite right, lang service is part of installLocation -->
+      <Feature Id='InstallLocation' Title='Registry entries for location of compiler DLLs'
+               Description='Adds registry entries that indicate where the FSharp.Compiler.dll and fsc.exe binaries can be found on a target machine.' Level='1'>
+        <ComponentRef Id='FSharp.InstallLocation' />
+      </Feature>
+
+    </Feature>
+
+<!-- ENABLE THIS IF ANY VS PROJECT TEMPLATES OR ITEMS GET INSTALLED
+    <CustomAction Id='CA_VS90Setup'
+                  Property='VS90DEVENV'
+                  ExeCommand=' /setup'
+                  Execute='commit'
+                  Impersonate='no'
+                  Return='ignore'>
+    </CustomAction>
+-->
+    
+    <InstallExecuteSequence>
+      <RemoveRegistryValues/>
+      <RemoveFiles/>
+      <InstallFiles/>
+      <WriteRegistryValues/>
+      <!-- ENABLE THIS IF ANY VS PROJECT TEMPLATES OR ITEMS GET INSTALLED
+      <Custom Action='CA_VS90Setup'  After='MsiPublishAssemblies'></Custom>
+      -->
+    </InstallExecuteSequence>
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+
+    <UIRef Id="WixUI_InstallDir" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+  </Product>
+</Wix>

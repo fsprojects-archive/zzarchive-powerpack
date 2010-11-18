@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <FSharpPowerPackSourcesRoot>..</FSharpPowerPackSourcesRoot>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+  <Import Project="$(FSharpPowerPackSourcesRoot)\FSharpPowerPackSource.Settings.targets" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{816cb737-0648-4889-8662-54484d42824d}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>FSharp.PowerPack.Metadata</AssemblyName>
+    <AllowCrossTargeting>true</AllowCrossTargeting>
+    <TreatWarningsAsErrors>
+    </TreatWarningsAsErrors>
+    <!-- 5310 tracks reenabling -->
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <DefineConstants>INCLUDE_METADATA_READER;$(DefineConstants)</DefineConstants>
+    <DocumentationFile>FSharp.PowerPack.Metadata.xml</DocumentationFile>
+    <NoWarn>$(NoWarn);9;62</NoWarn>
+  </PropertyGroup>
+  <!-- These dummy entries are needed for F# Beta2 -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  </PropertyGroup>
+  <!-- References -->
+  <!-- Files -->
+  <ItemGroup>
+    <Compile Include="..\assemblyinfo.Common.fs">
+      <Link>assemblyinfo.Common.fs</Link>
+    </Compile>
+    <Compile Include="assemblyinfo.FSharp.PowerPack.Metadata.dll.fs">
+      <Link>assemblyinfo.FSharp.PowerPack.Metadata.dll.fs</Link>
+    </Compile>
+    <Compile Include="Prelude.fs" />
+    <Compile Include="FSComp.fs">
+      <Link>FSComp.fs</Link>
+    </Compile>
+    <Compile Include="FlatList.fs">
+      <Link>FlatList.fs</Link>
+    </Compile>
+    <Compile Include="QueueList.fs">
+      <Link>QueueList.fs</Link>
+    </Compile>
+    <Compile Include="PrettyNaming.fs">
+      <Link>PrettyNaming.fs</Link>
+    </Compile>
+    <Compile Include="il.fs">
+      <Link>il.fs</Link>
+    </Compile>
+    <Compile Include="tast.fs">
+      <Link>tast.fs</Link>
+    </Compile>
+    <Compile Include="env.fs">
+      <Link>env.fs</Link>
+    </Compile>
+    <Compile Include="tastops.fs">
+      <Link>tastops.fs</Link>
+    </Compile>
+    <Compile Include="pickle.fs">
+      <Link>pickle.fs</Link>
+    </Compile>
+    <Compile Include="..\FSharp.PowerPack\CompilerLocationUtils.fs">
+      <Link>CompilerLocationUtils.fs</Link>
+    </Compile>
+    <Compile Include="Metadata.fsi" />
+    <Compile Include="Metadata.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="FSharp.Core" />
+  </ItemGroup>
+  <Import Project="$(FSharpPowerPackSourcesRoot)\FSharpPowerPackSource.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="!Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition="Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+</Project>

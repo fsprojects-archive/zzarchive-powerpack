@@ -1,0 +1,41 @@
+<html>
+
+<head>
+<title>Personal WebSite StarterKit in F#</title>
+
+  <link type="text/css" rel="Stylesheet" href="../../../../../doc/rmcstyle-copy.css">
+  <link type="text/css" rel="Stylesheet" href="../../../../../doc/groupStyle-copy.css">
+
+  <style type="text/css">
+  TT { font-weight: bold; color: blue; font-size: 10pt; }
+  PRE { font-weight: bold; color: blue; font-size: 10pt;  }
+  </style>
+  
+</head>
+
+<body>
+
+<h1>Personal WebSite StarterKit in F#</h1>
+
+  <p> Links: <a href="../Doc.html">Up</a></p>
+
+  <p>This sample shows how to use F# for developing ASP.NET 2.0 data-driven web application.
+    The sample uses ASP.NET Membership and Roles for managing users of the website and custom database for
+    storing albums and photos.</p>
+
+  <p>NOTE: you will need to follow the instructions in <a href="Welcome.html">Welcome.html</a>, e.g. install SQL Server Management Studio Express and run the <tt>personal-add.sql</tt> SQL script in that tool.</p>
+  
+  <p>The data-access core of the application and declaration of the data structures can be found in <a href="App_Code/PhotoManager.fs">PhotoManager.fs</a>.
+    Note that we use F# record type to represent the data loaded from a database. For example:</p>
+
+  <pre>
+  type Album = { AlbumID:int; Count:int; Caption:string; IsPublic:bool }
+  type Photo = { PhotoID:int; PhotoAlbumID:int; PhotoCaption:string; }
+  </pre>    
+<p>The rest of the application logic is implemented in the pages, <code>*.aspx</code> file represents a ASP.NET markup with 
+  control declarations and <code>*.aspx.fs</code> implements a page logic in F#. The site also contains <code>Admin</code>
+  directory which contains pages for uploading photos and creating albums, which can be accessed only by the administrator.</p>
+<p>For more information about configuring the sample, see the sample <a href="Welcome.html">Welcome page</a>.</p>
+
+</body>
+</html>

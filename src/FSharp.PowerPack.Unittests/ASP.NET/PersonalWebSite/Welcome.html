@@ -1,0 +1,304 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Welcome</title>
+    <style type="text/css">
+
+body {
+    font-family: verdana;
+    font-size:9pt;
+    line-height:16pt;
+    margin:50px;
+    }
+    
+h1 {
+    font-family: verdana;
+    font-size:16pt;
+    font-weight:bold;
+    }
+    
+h2 {
+    font-family: verdana;
+    font-size:12pt;
+    font-weight:bold;
+    color: #666;
+    }
+
+h3 {
+    font-family: verdana;
+    font-size:12pt;
+    font-weight:bold;
+    color: #999;
+    }
+
+pre, code { font-family: consolas; padding:0px; margin-top:4px; margin-bottom:4px; }
+</style>
+</head>
+<body>
+    <h1>Personal Web Site Starter Kit - in F#!</h1>
+    <p>
+        Congratulations! You have created your own Personal Web Site, which includes a home
+        page, resume, and photo album. You can use the site as-is with some small customizations, such as adding your own
+        content. In addition, you can add pages to the site. The following sections explain
+        how to use the Personal Web Site. First we will mention
+      a few important topics regarding the application and database configuration:</p>
+    <ul>
+        <li>Configuring F# to work with ASP.NET <span style="color: red">(important)</span>
+        </li>
+      <li>Creating and Configuring Databases <span style="color: red">(important)</span></li>
+      <li>Creating a new F# page </li>
+    </ul>
+  <p>
+    In the rest of the document we will describe several actions that you can do when
+    the application is correctly configured:</p>
+  <ul>
+      <li>Creating an Administrative User </li>
+        <li>Managing the Personal Web Site</li>
+        <li>Working with Photo Albums</li>
+        <li>Publishing Your Web Site</li>
+    </ul>
+  <p>
+    <strong>NOTE: </strong>Sections marked <span style="color: red">important</span>,
+    have to be followed before you can start the application!</p>
+  <h2>Configuring F# to Work with ASP.NET</h2>
+  <p>
+    For F# to work correctly with ASP.NET it is needed to configure a CodeDOM provider
+    in the <code>web.config</code> file. The file already includes section with the
+    configuration, but you need to update the assembly version to match the F# version
+    you installed (if you don't know the version, you can start <strong>FSI</strong>,
+    which prints the version when starting). Find the<code> compiler</code> node in
+    the <code>web.config</code> file and set the right version number (e.g. 1.9.2.2):&nbsp;</p>
+  <pre>&lt;?xml version="1.0"?&gt;
+&lt;configuration&gt;
+  &lt;system.web&gt;
+    &lt;compilation debug="true"&gt;  
+      &lt;compilers&gt;
+        &lt;compiler language="F#;f#;fs;fsharp" extension=".fs" type="Microsoft.FSharp.Compiler.CodeDom.FSharpAspNetCodeProvider, 
+                            FSharp.Compiler.CodeDom, Version=<strong>&lt;version number&gt;</strong>, Culture=neutral, PublicKeyToken=a19089b1c74d0809"/&gt;
+      &lt;/compilers&gt;
+    &lt;/compilation&gt;
+  &lt;/system.web&gt;
+&lt;/configuration&gt;
+</pre>
+  <p>
+    If you want to configure a different ASP.NET project to use F#, you need to include
+    the <span style="font-family: Consolas">compiler </span>section from this code snippet.</p>
+    <h2>Creating and Configuring Databases</h2>
+  <p>
+    Before you can start using the application, you need to configure a database. This
+    application uses two separate databases - one to store user information managed
+    by the ASP.NET and second to store custom application data (Photos and Albums).
+    We describe two possible situations - you can either use SQL Server 2005 Express
+    edition and keep your database files in <code>App_Data</code> directory or you can use different
+    SQL Server edition.</p>
+  <p>
+    <strong>To use SQL Server 2005 Express</strong></p>
+  <ol>
+  <li>You can get <strong>SQL Server 2005 Express</strong> for free from Microsoft website: <a href="http://msdn.microsoft.com/vstudio/express/sql">
+    http://msdn.microsoft.com/vstudio/express/sql</a>
+  </li>
+    <li>You need to create the database to store custom data manually. To do this right
+      click <strong>App_Data</strong> folder, select <strong>Add New Item...</strong>,
+      select <strong>SQL Database</strong> and call it <strong>Personal.mdf</strong>.</li>
+    <li>Open <code>web.config</code> file and modify the connectionStrings section to include the following:
+    <pre>&lt;connectionStrings&gt;
+  &lt;add name="Personal" providerName="System.Data.SqlClient" connectionString=
+       "Data Source=.\SQLExpress;Integrated Security=True;User Instance=True;AttachDBFilename=|DataDirectory|Personal.mdf" /&gt;
+  &lt;remove name="LocalSqlServer"/&gt;
+  &lt;add name="LocalSqlServer" connectionString=
+       "Data Source=.\SQLExpress;Integrated Security=True;User Instance=True;AttachDBFilename=|DataDirectory|aspnetdb.mdf" /&gt;
+&lt;/connectionStrings&gt;   </pre>
+    </li>
+    <li>Now we created and configured the database, but we still need to create database
+      tables required by the application. The database and database tables reqired by
+      ASP.NET will be created automatically (including the <strong>AspNetDB.mdf </strong>
+      file), so you don't need to configure it manually.</li>
+    <li>To configure the custom database (<strong>Personal.mdf</strong>)&nbsp;we will
+      need <strong>SQL Server Management Studio Express</strong>, which can be downloaded
+      from the same URL as <strong>SQL Server 2005 Express</strong>. Open <strong>SQL Server
+        Management Studio Express</strong>, connect to the created database file (right
+      click on <strong>Databases </strong>in the <strong>Object Explorer </strong>and
+      select <strong>Attach...</strong>), copy contents of the <span style="font-family: Consolas">
+        personal-add.sql</span> file in the <strong>App_Data</strong> to new query window
+      and execute it. </li>
+    <li>You are now ready to start using the application, to open the home page press
+      Ctrl+F5!&nbsp;</li>
+  </ol>
+  <p>
+    <strong>To use other SQL Server 2005 edition</strong></p>
+  <ol>
+    <li>First we will configure ASP.NET database. To do this run the <strong>ASP.NET SQL
+      Server Setup wizard tool</strong>:<br />
+      <code>C:\Windows\Microsoft.NET\Framework\v2.0.50727\aspnet_regsql.exe</code></li>
+    <li>In the wizard select <strong>Configure SQL Server for application services</strong>,
+      select authentication method (you can leave Windows authentication if your windows
+      account has the rights to create databases), enter a database name (e.g. <strong>PWS_AspNetDb</strong>)
+      and click <strong>Finish</strong>. If you want to create databse in different than
+      the default location, than you need to open <strong>SQL Server Management Studio</strong>
+      and create the database before running the wizard.</li>
+    <li>Now we configured ASP.NET database and we will create the application database
+      to store Photos and Albums. To do this open <strong>SQL Server Management Studio </strong>
+      connect to the SQL Server instance and create a new databse (e.g. <strong>PWS_Personal</strong>)
+      open a new query window, copy SQL commands from the <code>personal-add.sql</code> file in
+      the <strong>App_Data</strong> directory and execute them to create database tables.</li>
+    <li>Open <code>web.config</code> file and modify the connectionStrings section to
+      include the following (note: this sample uses Windows authentication, to use different
+      authentication method you will need to modify the connection strings):
+      <pre>&lt;connectionStrings&gt;
+  &lt;add name="Personal" providerName="System.Data.SqlClient" connectionString=
+       "Data Source=.;Integrated Security=True;Database=PWS_WebPersonal" /&gt;
+  &lt;remove name="LocalSqlServer"/&gt;
+  &lt;add name="LocalSqlServer" connectionString=
+       "Data Source=.;Integrated Security=True;Database=PWS_AspNetDb" /&gt;
+&lt;/connectionStrings&gt;   </pre>
+    </li>
+    <li>You are now ready to start using the application, to open the home page press
+      Ctrl+F5!&nbsp; </li>
+  </ol>
+  <h2>
+    Creating a New F# Page</h2>
+  <p>
+    F# distribution currently doesn't supply F# page template, so if you want to create
+    a new page you'll have to workaround this limitation. The easiest way to do so is
+    to create a new text file (right click on the project, select <strong>Add New Item</strong>,
+    select <strong>Text File</strong>). Once you created two empty files (<code>NewPage.aspx</code>
+    and <code>NewPage.aspx.fs</code>), you can copy the following code and start programming
+    ASP.NET applications in F#!</p>
+  <p>
+    <strong>NewPage.aspx</strong></p>
+  <pre>
+&lt;%@ Page Language="F#" AutoEventWireup="true"  CodeFile="NewPage.aspx.fs" Inherits="FSharpWeb.NewPage" %&gt;
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
+&lt;head runat="server"&gt;
+  &lt;title&gt;New Page&lt;/title&gt;
+&lt;/head&gt;&lt;body&gt;<br />  &lt;form runat="server"&gt;&lt;div&gt;
+    &lt;h1&gt;New Page&lt;/h1&gt;
+    &lt;!-- ASP.NET button with event handler declared in code-behind file --&gt;
+    &lt;asp:Button id="btnClickMe" runat="server" click="ButtonClicked" Text="Click me!" /&gt;
+  &lt;/div&gt;&lt;/form&gt;
+&lt;/body&gt;&lt;/html&gt; </pre>
+<p>
+    <strong>NewPage.aspx.fs</strong></p>
+  <pre>
+#light
+namespace FSharpWeb
+
+open System
+open System.Web
+open System.Web.UI
+open System.Web.UI.WebControls
+
+type NewPage = 
+  inherit System.Web.UI.Page 
+  val mutable btnClickMe : Button
+
+  // initialize all controls to a null value
+  new() = 
+    let init() = (Array.zeroCreate 1).[0]
+    { btnClickMe = init(); } 
+  override this.OnLoad(e) =
+    base.OnLoad(e);
+  // Event handler for the button
+  member this.ButtonClicked(sender, e) =
+    this.btnClickMe.Text &lt;- "Clicked!"</pre>
+  <p>
+    <strong>NOTE: </strong>Since F# doesn't currently support partial classes, you have
+    to declare all controls manually in the code-behind file. This means that every
+    control with <strong>runat </strong>attribute set to <strong>server </strong>and
+    with <strong>id</strong> attribute must have corresponding field in the F# code-behind
+    file. In this example the only control used is a <strong>btnClickMe</strong>.</p>
+  <h2>
+    Creating an Administrative User</h2>
+    <p>
+        The first step you must take is to create an administrative user. The administrative
+        user has permission to upload photos and create albums.</p>
+    <p>
+        <b>To create an administrative user</b></p>
+    <ol>
+        <li>Run the site at least once before proceeding. This ensures the initialization of the Membership
+        and Roles databases.</li>
+        <li>In the <b>Website</b> menu, click <b>ASP.NET Configuration</b>.</li><li>Click the
+        <b>Security</b> tab.</li><li>Click <b>Create user</b>.</li><li>In the <b>Create User</b>
+        box, type a user name, password, and e-mail address for the administrator user. You
+        must also provide a security question and answer that is used to help you recover your
+        password, if necessary.</li><li>In the <b>Roles</b> box, select both the <b>Administrators</b>
+        and <b>Friends</b> check boxes to make the user into an administrator and a member of
+        the Friends role.</li><li>Click <b>Create User</b>.</li><li>Close the Web Site Administration
+        Tool window.</li>
+    </ol>
+    <h2>Managing the Personal Web Site</h2>
+    <p>
+        The following sections provide basic information about how to administer the site.</p>
+    <h3>Designating Guest Users as Friends</h3>
+    <p>
+        Visitors to your site can register themselves on your site. You can make registered
+        users into Friends, which gives them permission to view private photo albums.</p>
+    <p>
+        <b>To give users permission to view private photo albums</b></p>
+    <ol>
+        <li>In the <b>Website</b> menu, click <b>ASP.NET Configuration</b>.</li><li>Click the
+        <b>Security</b> tab.</li>
+        <li>Under <b>Users,</b> click <b>Manage users.</b> </li>
+        <li>In the user list, click <b>Edit roles</b> for the guest. (If you do not see the
+        user's name, use the search box.)</li>
+        <li>Under <b>Roles</b>, select <b>Friends</b>. </li>
+        <li>Close the Web Administration Tool window.</li>
+    </ol>
+    <h3>Working with Photo Albums</h3>
+    <p>
+        The photo album feature allows you to:</p>
+    <ul>
+        <li>Create albums that act as collections of photos.</li>
+        <li>Upload photos individually into an album.</li>
+        <li>Bulk upload a collection of photos into an album. This feature is useful for creating
+        an album from a collection of photos, such as your vacation pictures.</li>
+    </ul>
+    <p>
+        <b>To create an album and add photos</b></p>
+    <ol>
+        <li>Login to the site as an administrator.</li>
+        <li>In the menu, click <b>Manage</b>. </li>
+        <li>Under <b>Add New Album</b>, type a name.</li>
+        <li>If you want everyone to be able to see your photos, select <b>Make this album public</b>.
+        If you leave this check box unselected, only users who are registered as friends can
+        view the album.</li>
+        <li>Click <b>Add</b> to create the album.&nbsp;</li>
+        <li>Under <b>Your Albums</b>, click the blank photo for the new album.</li>
+        <li>Under <b>Add Photos</b>, type or select the photo file name, type a caption, and
+        click <b>Insert</b>. </li>
+        <li>Repeat Step 4 for each photo you want to add to the album.</li>
+    </ol>
+    <p>
+        <b>To bulk upload photos into an album</b></p>
+    <ol>
+        <li>Copy your photos to the Upload folder in the Web site.</li>
+        <li>In the menu, click <b>Manage</b>. </li>
+        <li>In the album list, click the photo of the album to use. (Create a new album first,
+        if necessary.)</li>
+        <li>Click <b>Import</b>. All the photos in the Upload folder are added to the album.</li>
+    </ol>
+    <h2>Publishing your Site</h2>
+    <p>
+        When you are ready to share your Web site with others, you can copy it to your Web
+        server. You need to know the File Transfer Protocol (FTP) address of your server,
+        and if required, the user name and password you use.</p>
+    <ol>
+        <li>In the <b>Website</b> menu, click <b>Copy Web Site</b>. The Copy Web Site tool displays
+        the files from your Web site under <b>Source Web Site</b>. </li>
+        <li>In the <b>Connect to</b> box, click <b>Connect to</b> ....</li>
+        <li>In the <b>Open Web Site</b> dialog box, click the <b>FTP Sites</b> tab.</li>
+        <li>Type the FTP address of your server, and if required, the user name and password
+        that your hosting site has provided. The FTP URL usually has a format like this:
+        <pre>ftp://ftp.servername/foldername</pre></li>
+        <li>Click <b>Open</b>. The files on the Web server are displayed under <b>Remote Web
+        Site</b>.<br />
+        <b>Note:</b> If you have trouble connecting to the server, contact the server administrator.</li>
+        <li>In the <b>Move Files</b> list, click <b>All source files to remote Web site</b>.
+        </li>
+        <li>Click the <b>Copy Web Site</b> button. The files from your Personal Web Site are
+        copied to the server.</li>
+    </ol>
+</body>
+</html>

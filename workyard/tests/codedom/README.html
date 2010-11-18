@@ -1,0 +1,478 @@
+<html>
+<style>
+    body {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+    h1,h2,h3 {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .note {
+        padding: 0.5em 1em 0.5em 1em;
+        border: dashed 2px red;
+        background-color: #ecc;
+    }
+    p.optdesc {
+        margin-left: 2em;
+    }
+    div.usagescenario {
+        margin-top: 2em;
+        padding: 0.5em 1em 0.5em 1em;
+        border: solid 1px black;
+        background-color: #eee;
+    }
+    a {
+        color: #666;
+    }
+    a:visited {
+        color: #333;
+    }
+    table#testdesc {
+        font-size: 10pt;
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        border: solid 2px black;
+    }
+    table#testdesc th {
+        text-align: left;
+        border-right: solid 1px black;
+        border-bottom: solid 3px black;
+        background-color: #333;
+        color: white;
+    }
+    table#testdesc td {
+        padding: 0.2em 1em 0.2em 0.2em;
+        margin: 0 0 0 0;
+        border-right: solid 1px black;
+    }
+
+    table#testdesc .cls_subset {
+        background-color: #eee;
+    }
+
+    table#testdesc .cls_everett {
+        background-color: #ddd;
+    }
+
+    table#testdesc .cls_whidbey {
+        background-color: #ccc;
+    }
+</style>
+<head><title>CodeDom Test Suite Readme</title></head>
+<body>
+
+<h1>CodeDom Test Suite Readme</h1>
+Copyright (C) Microsoft Corp. 2004.  All rights reserved.
+
+<h2>Introduction</h2>
+
+
+<p>
+The CodeDom test suite is a collection of tests that enables custom
+code providers a way to verify that they are generating and compiling code
+from their provider properly.  Each test takes a pre-built CodeDom tree
+and generates and compiles the tree using the provider supplied to it on
+the command line.  The tests then verify the assembly generated from the
+code provider through reflection.
+</p>
+
+<p>
+The pre-built CodeDom trees are listed in the <code>BuildTree</code> methods
+of each test located in the <code>tests\</code> directory.  The generated
+C# code is listed above the CodeDom code that generates it.  Even if you
+don't have a CodeDom provider to test, you can browse through these tests
+and get a feel for the constructs that are required to generate certain
+kinds of code.
+</p>
+
+<p class="note">You must have one of the SDK versions of the runtime installed
+on your machine to use this test suite.  These are freely available on 
+MSDN.
+</p>
+
+<p>To get started, <a href="#scenarios">refer to common
+    usage scenarios</a>.
+
+<p>Test case writers may want to refer to the
+<a href="notesfortestcasewriters.html">Writing Test Cases for the Test Suite</a>
+document also located in this collection.</p>
+
+<h2>Usage</h2>
+
+<p>
+The test suite takes the following command line arguments two of which
+are required.  Below are common usage scenarios, and below that are the full
+usage descriptions.
+</p>
+
+<h3>Compiling</h3>
+
+<p>A Visual Studio .NET 2005 Beta1 solution file has been included.  Please upgrade to
+Whidbey Beta1 of the runtime if you haven't already.  A batch file
+named <code>build.bat</code> is included for those that wish to build the
+test suite against v1.0 or v1.1 of the runtime, or for those preferring to
+build from the commandline.
+</p>
+
+<p>
+If you would like to use this batch file to build for v1.0 or v1.1 of the
+runtime, simply run it as is.  Those users wanting to use the batch file for
+Whidbey must set the environment variable located in the script called
+<code>IS_WHIDBEY</code> to <code>1</code>.
+</p>
+
+<p class="note">It is recommended that you compile using the "Debug"
+release version in Visual Studio .NET or compile with the /debug+ switch on the command line.
+This will enhance your ability to troubleshoot problems with your provider
+while running the test cases.
+</p>
+
+<a name="scenarios"></a>
+<h3>Common Usage Scenarios</h3>
+
+<div class="usagescenario">
+<p>
+Test Microsoft's CSharpCodeProvider against all test cases in the library
+"tests.dll."  Also be verbose.
+</p>
+<pre>
+   &gt; cdtsuite <code>/p</code>:Microsoft.CSharp.CSharpCodeProvider <code>/tl</code>:tests.dll <code>/v</code>
+</pre>
+</div>
+
+<div class="usagescenario">
+<p>
+Test MyCodeProvider located in "MyDll.dll" against all test cases in the
+library "tests.dll."  Also, be verbose, and save all assemblies, logs
+and source files during the test.
+</p>
+<pre>
+   &gt; cdtsuite <code>/p</code>:MyCodeProvider <code>/pl</code>:MyDll.dll <code>/tl</code>:tests.dll <code>/v</code> <code>/sl</code> <code>/sa</code> <code>/ss</code>
+</pre>
+</div>
+
+<div class="usagescenario">
+<p>
+Test MyCodeProvider located in "MyDll.dll" against the test cases named
+"ArrayTest" and "ParamsTest" in the library "tests.dll."
+</p>
+<pre>
+   &gt; cdtsuite <code>/p</code>:MyCodeProvider <code>/pl</code>:MyDll.dll <code>/tl</code>:tests.dll <code>/t</code>:ArrayTest <code>/t</code>:ParamsTest
+</pre>
+</div>
+
+<div class="usagescenario">
+<p>
+Test MyCodeProvider located in "MyDll.dll" against all test cases that are
+of the class "Subset" in the library "tests.dll."
+</p>
+<pre>
+   &gt; cdtsuite <code>/p</code>:MyCodeProvider <code>/pl</code>:MyDll.dll <code>/tl</code>:tests.dll <code>/set</code>:Subset
+</pre>
+</div>
+
+<div class="usagescenario">
+<p>
+Test Microsoft's VBCodeProvider against the test case library "tests.dll."
+Also, be verbose, and save all assemblies, logs and source files during the test.
+</p>
+<pre>
+   &gt; cdtsuite <code>/p</code>:Microsoft.VisualBasic.VBCodeProvider <code>/tl</code>:c:\tests.dll
+</pre>
+</div>
+
+<div class="usagescenario">
+<p>
+Test Microsoft's JScriptCodeProvider against the test case library "tests.dll."
+The <code><code>/lang</code></code> option makes the test suite use the the language name to
+get the provider.  Also, dump logs and source files for failing test cases.
+</p>
+<pre>
+   &gt; cdtsuite <code>/lang</code>:js <code>/tl</code>:c:\tests.dll <code>/dump</code>
+</pre>
+</div>
+
+<h3>Full Usage Descriptions</h3>
+
+<p>
+Options are case insensitive. You may also specify options with a '-'.
+</p>
+
+<code>/help</code> or <code>/?</code> or <code>/h</code>
+<p class="optdesc">
+    Shows the usage description. 
+</p>
+
+<code>/codedomprovider:&lt;value&gt;</code> or <code>/p:&lt;value&gt;</code>
+<p class="optdesc">
+<b>Either this or languagename required.</b> CodeDomProvider 
+    you wish to use to run the test cases. This should be specified 
+    using the full name. You should also specify the codedomproviderlib 
+    option if this provider is not in an assembly in the GAC. If both 
+    languagename and codedomprovider options are specified, languagename 
+    is taken in favor of the two. 
+</p>
+
+ <code>/languagename:&lt;value&gt;</code> or <code>/lang:&lt;value&gt;</code>
+<p class="optdesc">
+<b>Either this or languagename required.</b> The language to run 
+    the test cases against. This is the name given to CreateProvider(). 
+    This only works in CLR versions >= 2.0. If both languagename and 
+    codedomprovider options are specified, languagename is taken 
+    in favor of the two. 
+</p>
+
+ <code>/testcaselib:&lt;value&gt;</code> or <code>/tl:&lt;value&gt;</code>
+<p class="optdesc">
+<b>Required.</b> Test case assembly that stores the test cases you 
+    wish to test against. You may specify more than one. 
+</p>
+
+ <code>/codedomproviderlib:&lt;value&gt;</code> or <code>/pl:&lt;value&gt;</code>
+<p class="optdesc">
+    The assembly where the CodeDomProvider lives. This should be 
+    specified either by file name or the strong name. If this option 
+    is not specified, the current assembly is used. 
+</p>
+
+ <code>/list</code> or <code>/l</code>
+<p class="optdesc">
+    Lists available tests. Use -listdesc to get descriptions. Note 
+    you must pass in valid test assemblies in order for this to print 
+    anything. 
+</p>
+
+ <code>/listdesc</code> or <code>/ld</code>
+<p class="optdesc">
+    Lists available tests and their descriptions. Note you must 
+    pass in valid test assemblies for this to print anything. 
+</p>
+
+ <code>/set:&lt;value&gt;</code> or <code>/s:&lt;value&gt;</code>
+<p class="optdesc">
+    The set of tests to run. Only those matching the given option will 
+    be run. See -setlist for a list of valid set names. 
+</p>
+
+ <code>/setlist</code> or <code>/sls</code>
+<p class="optdesc">
+    The list of test sets you may run. 
+</p>
+
+ <code>/optionfile:&lt;value&gt;</code> or <code>/of:&lt;value&gt;</code>
+<p class="optdesc">
+    Path to a option file(s) that lists these options one per line. 
+    Options specified in these file will 'add to' those also specified 
+    on the command-line. This is similar to the CSharp compiler's 
+    response file except options should not have '-' or '/' prepended 
+    before them. 
+</p>
+
+ <code>/runtestcase:&lt;value&gt;</code> or <code>/t:&lt;value&gt;</code>
+<p class="optdesc">
+    Select specific test case(s) to run. You may specify more than 
+    one. 
+</p>
+
+ <code>/dontruntestcase:&lt;value&gt;</code> or <code>/n:&lt;value&gt;</code>
+<p class="optdesc">
+    Select specific test case(s) *NOT* to run. You may specify more 
+    than one. 
+</p>
+
+<code>/savedirectory:&lt;value&gt;</code> or <code>/dir:&lt;value&gt;</code> or <code>/savedir:&lt;value&gt;</code>
+<p class="optdesc">
+    The directory to save all logs, assemblies and source files. 
+</p>
+
+<code>/savesources</code> or <code>/ss</code>
+<p class="optdesc">
+    Save the sources even if all tests pass. 
+</p>
+
+ <code>/saveassemblies</code> or <code>/sa</code>
+<p class="optdesc">
+    Save the generated assemblies even if all tests pass. 
+</p>
+
+ <code>/savelogs</code> or <code>/sl</code>
+<p class="optdesc">
+    Save the generated logs even if all tests pass. 
+</p>
+
+ <code>/verbose</code> or <code>/v</code>
+<p class="optdesc">
+    Be verbose. All test case output is written to the console. If 
+    this is not given, no output is given unless the test case fails. 
+</p>
+
+ <code>/dump</code> or <code>/d</code>
+<p class="optdesc">
+    If during the run a test case fails, dump the log and source file 
+    to the console for that test case. 
+</p>
+
+<h2>Layout</h2>
+
+<p>
+The suite consists of a single command-line program called <code>cdtsuite</code>,
+a <code>CodeDomTest.dll</code> assembly that contains some utility classes and
+base types, and an assembly that contains a base line test suite.
+The tests in this assembly all derive from the class CodeDomTestTree
+as provided in <code>CodeDomTest.dll</code>.
+</p>
+
+<p>
+Every test case derives from the base type CodeDomTest, and <code>cdtsuite</code>
+uses virtual methods on this type to run each test.  The tests
+provided in the accompanying base line test case assembly (<code>tests.dll</code>),
+each exercise some part of a CodeDomProvider's ability to generate
+and compile CodeDom trees.  These tests and a short description are
+given in the <a href="#testcasedescription">Test Case Description</a>
+section.
+</p>
+
+
+<h3>Test Classification (Buckets)</h3>
+<p>
+These base line tests are classified into three buckets: Subset,
+Everett and Whidbey.  Subset tests generate and test CodeDom trees
+that generate the absolute minimally required parts of CodeDom.
+Everett and Whidbey tests generate trees that fall outside of this
+subset but within the feature areas of each classification (i.e.
+Everett tests don't test generics while Whidbey tests do).</p>
+
+<p>When
+you specify the classification on the command-line, every test in
+or below that classification will be tested.  So if you specify
+<code>Everett</code> on the command-line, every test with the
+classification of
+<code>Subset</code> and <code>Everett</code> will be tested, but
+no test from <code>Whidbey</code> will be run.
+</p>
+
+<p class="note">The CodeDom subset is a moving target.  Currently, the official
+document is being reviewed and finalized.  Look for its release on MSDN
+"in the near future."</p>
+
+<h2>Output</h2>
+
+<p>
+<code>cdtsuite</code> generates .log files for every test it runs.  This log
+file contains messages that each test case prints while it is
+running and is saved to <code>(output_dir)\(test_name).log</code>.  If no
+output directory is specified with <code>/savedir</code>:, this directory
+defaults to <code>(current_dir)\testoutput</code>.  Unless <code>/savelogs</code> is
+given, log files for passing test cases will be deleted.
+</p>
+
+<h3>Source File Generation</h3>
+<p>
+If a test case derives from CodeDomTestTree, a source file may
+be saved in the same directory as <code>(test_name).src</code>.  As with
+.log files, .src files are deleted if the test case passes
+(unless <code>/savesources</code> is given).
+</p>
+
+<h3>Assembly File Generation</h3>
+<p>
+Assemblies generated from these tests may also be saved by
+specifying the <code>/saveassemblies</code> option on the command-line.  Only
+test cases deriving from CodeDomTestTree will save these files.
+Since assemblies are only generated if specified on the command
+line, these will not be deleted even if test cases pass.
+</p>
+
+<h3>Console Output</h3>
+<p>
+<code>cdtsuite</code>'s console output can be controlled with two arguments: <code>/verbose</code>
+and <code>/dump</code>.  There are four combinations of these arguments; these
+are listed below along with how they change <code>cdtsuite</code>'s behavior.
+</p>
+
+<em>no arguments</em>
+<p>
+  Nothing is printed, and only a summary is given after all test
+  cases are run.  The summary lists the test cases that failed
+  and where to find the log and source files for these failed
+  cases are located.
+</p>
+
+<code>/verbose</code> only
+<p>
+  As test cases are run, the output that would normally only go
+  to the log file is printed on the console.  This includes
+  test cases that have succeeded.  The summary is still given
+  at the end of the run.
+</p>
+
+<code>/dump</code> only
+<p>
+  Nothing is printed for successful test cases, but on failed
+  cases, both the log and source files are printed to the console.
+  A summary is given at the end of the test case run.
+</p>
+
+<code>/dump</code> and <code>/verbose</code>
+<p>
+  Output is printed to the console as test cases are run as in
+  <code>/verbose</code> mode, but also source files are printed for failed
+  cases.  As always, a summary is given at the end of all test
+  case runs.
+</p>
+
+<a style="color: black;" name="testcasedescription">
+<h2>Test Cases and their Descriptions</h2>
+</a>
+
+<table id="testdesc">
+<tr><th>Test Name</th><th>Bucket</th><th>Test Description</th></tr>
+<tr class="cls_subset"><td>CallMethodTest</td><td><em>Subset</em></td><td>Tests calling methods.</td></tr>
+<tr class="cls_subset"><td>CastingCodeDom</td><td><em>Subset</em></td><td>Tests casting</td></tr>
+<tr class="cls_subset"><td>CreateObjectTest</td><td><em>Subset</em></td><td>Tests object creation.</td></tr>
+<tr class="cls_subset"><td>DelegateTest</td><td><em>Subset</em></td><td>Tests delegates.</td></tr>
+<tr class="cls_subset"><td>EventTest</td><td><em>Subset</em></td><td>Tests events.</td></tr>
+<tr class="cls_subset"><td>IterationsTest</td><td><em>Subset</em></td><td>Tests iterations.</td></tr>
+<tr class="cls_subset"><td>NamespaceTest</td><td><em>Subset</em></td><td>Tests namespaces.</td></tr>
+<tr class="cls_subset"><td>OverloadTest</td><td><em>Subset</em></td><td>Tests method overloading.</td></tr>
+<tr class="cls_subset"><td>SubsetArrayTest</td><td><em>Subset</em></td><td>Tests arrays while conforming to the subset.</td></tr>
+<tr class="cls_subset"><td>SubsetAttributesTest</td><td><em>Subset</em></td><td>Tests metadata attributes while staying in the subset.</td></tr>
+<tr class="cls_subset"><td>SubsetBinaryOperatorsTest</td><td><em>Subset</em></td><td>Tests binary operators while staying within the subset spec.</td></tr>
+<tr class="cls_subset"><td>SubsetFieldsTest</td><td><em>Subset</em></td><td>Subset compatible test of calling fields.</td></tr>
+<tr class="cls_subset"><td>PropertiesTest</td><td><em>Subset</em></td><td>Tests properties</td></tr>
+<tr class="cls_subset"><td>TypeOfTest</td><td><em>Subset</em></td><td>Tests typeof statements.</td></tr>
+<tr class="cls_everett"><td>ArrayTest</td><td><em>Everett</em></td><td>Tests arrays.</td></tr>
+<tr class="cls_everett"><td>AttributesTest</td><td><em>Everett</em></td><td>Tests metadata attributes.</td></tr>
+<tr class="cls_everett"><td>BinaryOperatorsTest</td><td><em>Everett</em></td><td>Tests binary operators.</td></tr>
+<tr class="cls_everett"><td>CallingFieldTest</td><td><em>Everett</em></td><td>Tests calling fields.</td></tr>
+<tr class="cls_everett"><td>CallMethodWDirect</td><td><em>Everett</em></td><td>Call a method with a direction</td></tr>
+<tr class="cls_everett"><td>ClassTest</td><td><em>Everett</em></td><td>Tests classes.</td></tr>
+<tr class="cls_everett"><td>CodePrimitiveExpressionTest</td><td><em>Everett</em></td><td>Tests coding primitive expressions.</td></tr>
+<tr class="cls_everett"><td>CodeSnippetTest</td><td><em>Everett</em></td><td>Tests code snippets.</td></tr>
+<tr class="cls_everett"><td>CommentTest</td><td><em>Everett</em></td><td>Tests comment statements.</td></tr>
+<tr class="cls_everett"><td>ConditionalStatementTest</td><td><em>Everett</em></td><td>Tests conditional statements.</td></tr>
+<tr class="cls_everett"><td>ConstructorTest</td><td><em>Everett</em></td><td>Tests constructors.</td></tr>
+<tr class="cls_everett"><td>DeclareField</td><td><em>Everett</em></td><td>Tests declarations of fields.</td></tr>
+<tr class="cls_everett"><td>DeclareMethod</td><td><em>Everett</em></td><td>Tests declaration of methods.</td></tr>
+<tr class="cls_everett"><td>EnumTest</td><td><em>Everett</em></td><td>Test enumerations</td></tr>
+<tr class="cls_everett"><td>GeneratorSupportsTest</td><td><em>Everett</em></td><td>Tests GeneratorSupport enumeration.</td></tr>
+<tr class="cls_everett"><td>GoToTest</td><td><em>Everett</em></td><td>Tests goto statements</td></tr>
+<tr class="cls_everett"><td>ImplementingStructsTest</td><td><em>Everett</em></td><td>Tests structs that implement other things.</td></tr>
+<tr class="cls_everett"><td>IndexersTest</td><td><em>Everett</em></td><td>Tests indexers.</td></tr>
+<tr class="cls_everett"><td>LinePragmaTest</td><td><em>Everett</em></td><td>Tests CodeLinePragma.</td></tr>
+<tr class="cls_everett"><td>StructTest</td><td><em>Everett</em></td><td>Tests structs</td></tr>
+<tr class="cls_everett"><td>TryCatchTest</td><td><em>Everett</em></td><td>Tests try/catch/finally statements.</td></tr>
+<tr class="cls_everett"><td>TypeTest</td><td><em>Everett</em></td><td>Tests generating and using objects of different types.</td></tr>
+<tr class="cls_everett"><td>UnicodeCharEscapeTest</td><td><em>Subset</em></td><td>Test All the Unicode characters for escaping</td></tr>
+<tr class="cls_whidbey"><td>CheckSumTest</td><td><em>Whidbey</em></td><td>Checksum testing.</td></tr>
+<tr class="cls_whidbey"><td>GenericsTest</td><td><em>Whidbey</em></td><td>Tests generating generics from CodeDom.</td></tr>
+<tr class="cls_whidbey"><td>GlobalKeywordTest</td><td><em>Whidbey</em></td><td>Test the global keyword used to differentiate global namespaces from local ones.</td></tr>
+<tr class="cls_whidbey"><td>ParamsTest</td><td><em>Everett</em></td><td>Tests variable method parameters.</td></tr>
+<tr class="cls_whidbey"><td>PartialClassTest</td><td><em>Whidbey</em></td><td>Tests partial classes.</td></tr>
+<tr class="cls_whidbey"><td>RegionDirectiveTest</td><td><em>Whidbey</em></td><td>Tests region directives on various code constructs.</td></tr>
+<tr class="cls_whidbey"><td>VerbatimOrderingTest</td><td><em>Whidbey</em></td><td>Tests if types and members are generated in the order they are specified in the tree.</td></tr>
+</table>
+ 
+</body>
+</html>
+

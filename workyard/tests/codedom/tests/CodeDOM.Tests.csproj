@@ -1,0 +1,105 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{096BAAF6-18DA-423B-AB9A-0A1E01A87A9D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>tests</RootNamespace>
+    <AssemblyName>tests</AssemblyName>
+    <WarningLevel>4</WarningLevel>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;WHIDBEY</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE;WHIDBEY</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.JScript" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="arraytest.cs" />
+    <Compile Include="attributestest.cs" />
+    <Compile Include="binaryoperatorstest.cs" />
+    <Compile Include="callingfieldtest.cs" />
+    <Compile Include="callmethodtest.cs" />
+    <Compile Include="callmethodwdirect.cs" />
+    <Compile Include="castingcodedom.cs" />
+    <Compile Include="checksumtest.cs" />
+    <Compile Include="classtest.cs" />
+    <Compile Include="codeprimitiveexpressiontest.cs" />
+    <Compile Include="codesnippettest.cs" />
+    <Compile Include="commenttest.cs" />
+    <Compile Include="conditionalstatementtest.cs" />
+    <Compile Include="constructortest.cs" />
+    <Compile Include="createobjecttest.cs" />
+    <Compile Include="declarefield.cs" />
+    <Compile Include="declaremethod.cs" />
+    <Compile Include="delegatetest.cs" />
+    <Compile Include="enumtest.cs" />
+    <Compile Include="eventtest.cs" />
+    <Compile Include="generatorsupportstest.cs" />
+    <Compile Include="genericstest.cs" />
+    <Compile Include="globalkeywordtest.cs" />
+    <Compile Include="gototest.cs" />
+    <Compile Include="implementingstructstest.cs" />
+    <Compile Include="indexerstest.cs" />
+    <Compile Include="iterationstest.cs" />
+    <Compile Include="linepragmatest.cs" />
+    <Compile Include="namespacetest.cs" />
+    <Compile Include="overloadtest.cs" />
+    <Compile Include="paramstest.cs" />
+    <Compile Include="partialclasstest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="propertiestest.cs" />
+    <Compile Include="regiondirectivetest.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="structtest.cs" />
+    <Compile Include="subsetarraytest.cs" />
+    <Compile Include="subsetattributestest.cs" />
+    <Compile Include="subsetbinaryoperatorstest.cs" />
+    <Compile Include="subsetfieldstest.cs" />
+    <Compile Include="trycatchtest.cs" />
+    <Compile Include="typeoftest.cs" />
+    <Compile Include="typetest.cs" />
+    <Compile Include="unicodecharescapetest.cs" />
+    <Compile Include="verbatimorderingtest.cs" />
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CodeDomTest\CodeDOM.TestCore.csproj">
+      <Project>{09E715E3-DCEF-4A52-B784-33C52A452117}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+      <Name>CodeDOM.TestCore</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
+</Project>
