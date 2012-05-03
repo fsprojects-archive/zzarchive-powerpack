@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <FSharpPowerPackSourcesRoot>..</FSharpPowerPackSourcesRoot>
+    <TOOLS Condition=" '$(TOOLS)' == '' ">&gt;..\..\tools</TOOLS>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+  <Import Project="$(FSharpPowerPackSourcesRoot)\FSharpPowerPackSource.Settings.targets" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E2A0F944-E76E-4C53-B037-A050FDF7378A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>FSharp.PowerPack.Unittests</RootNamespace>
+    <AssemblyName>FSharp.PowerPack.Unittests</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StrongName>false</StrongName>
+    <!--->ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB}</ProjectTypeGuids-->
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>62</NoWarn>
+    <OtherFlags>--mlcompatibility</OtherFlags>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>62</NoWarn>
+    <OtherFlags>--mlcompatibility</OtherFlags>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Condition="'$(TargetFramework)' == 'Silverlight'" Include="NUnitFrameworkShims.fs" />
+    <Compile Include="Utilities.fs" />
+    <Compile Include="HashtblTests.fs" />
+    <Compile Include="MatrixVectorTests.fs" />
+    <Compile Include="LazyListTests.fs" />
+    <Compile Include="CompatTests.fs" />
+    <Compile Include="ColllectionTests.fs" />
+    <Compile Include="ControlTests.fs" />
+    <Compile Include="SetMapTests.fs" />
+    <Compile Include="PermutationTests.fs" />
+    <Compile Condition="'$(TargetFramework)' == ''" Include="NativeArrayTests.fs" />
+    <Compile Include="BigRationalTests.fs" />
+    <Compile Include="QuotationEvalTests.fs" />
+    <Compile Include="StructuredFormatTests.fs" />
+    <Compile Condition="'$(TargetFramework)' == ''" Include="MetadataTests.fs" />
+    <Compile Condition="'$(TargetFramework)' == ''" Include="QueryTests.fs" />
+    <Compile Include="AsyncStreamReaderTest.fs" />
+    <Compile Condition="'$(TargetFramework)' == ''" Include="ASP.NET\AspNetTester.fs">
+      <Link>AspNetTester.fs</Link>
+    </Compile>
+    <None Include="blas.dll" />
+    <None Include="LAPACK.dll" />
+    <None Condition="'$(TargetFramework)' == ''" Include="NORTHWND.MDF" />
+  </ItemGroup>
+  <Import Project="$(FSharpPowerPackSourcesRoot)\FSharpPowerPackSource.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="!Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition="Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+  <Import Condition="'$(TargetFramework)'=='Silverlight'" Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.Common.targets" />
+  <ItemGroup>
+    <Reference Include="FSharp.Compiler.CodeDom">
+      <HintPath>..\..\..\Debug\bin\FSharp.Compiler.CodeDom.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.PowerPack">
+      <HintPath>..\..\..\Debug\bin\FSharp.PowerPack.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.PowerPack.Build.Tasks">
+      <HintPath>..\..\..\Debug\bin\FSharp.PowerPack.Build.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.PowerPack.Compatibility">
+      <HintPath>..\..\..\Debug\bin\FSharp.PowerPack.Compatibility.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.PowerPack.Metadata">
+      <HintPath>..\..\..\Debug\bin\FSharp.PowerPack.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="fshtmldoc">
+      <HintPath>..\..\..\Debug\bin\fshtmldoc.exe</HintPath>
+    </Reference>
+    <Reference Include="fslex">
+      <HintPath>..\..\..\Debug\bin\fslex.exe</HintPath>
+    </Reference>
+    <Reference Include="fsyacc">
+      <HintPath>..\..\..\Debug\bin\fsyacc.exe</HintPath>
+    </Reference>
+    <Reference Include="LinqToSql.Northwind">
+      <HintPath>Linq\LinqToSql.Northwind\bin\Debug\LinqToSql.Northwind.dll</HintPath>
+    </Reference>
+    <Reference Condition="'$(TargetFramework)' == ''" Include="nunit.framework">
+      <HintPath>$(TOOLS)\NUnit\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Condition="'$(TargetFramework)' == ''" Include="System.Data" />
+    <Reference Condition="'$(TargetFramework)' == ''" Include="System.Data.Linq" />
+    <Reference Condition="'$(TargetFramework)' == ''" Include="System.Drawing" />
+    <Reference Condition="'$(TargetFramework)' == ''" Include="System.Windows.Forms" />
+    <ProjectReference Include="..\FSharp.PowerPack.Linq\FSharp.PowerPack.Linq.fsproj">
+      <Project>{4C2ED03B-5ACE-427B-8285-AD333E60F35E}</Project>
+      <Name>FSharp.PowerPack.Linq</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
