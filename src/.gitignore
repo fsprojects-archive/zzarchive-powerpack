@@ -1,0 +1,45 @@
+# General ignore
+Thumbs.db
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.sln.docstates
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+
+# Ignore generated files
+FsLex/fslexlex.fs
+FsLex/fslexpars.fs
+FsLex/fslexpars.fsi
+FsYacc/fsyacclex.fs
+FsYacc/fsyaccpars.fs
+FsYacc/fsyaccpars.fsi
+
+# Ignore doc
+src/FSharp.Compiler.CodeDom/FSharp.Compiler.CodeDom.xml
+src/FSharp.PowerPack.Build.Tasks/FSharp.PowerPack.Build.Tasks.xml
+src/FSharp.PowerPack.Compatibility/FSharp.PowerPack.Compatibility.xml
+src/FSharp.PowerPack.Linq/FSharp.PowerPack.Linq.xml
+src/FSharp.PowerPack.Metadata/FSharp.PowerPack.Metadata.xml
+src/FSharp.PowerPack.Parallel.Seq/FSharp.PowerPack.Parallel.Seq.xml
+src/FSharp.PowerPack/FSharp.PowerPack.xml
