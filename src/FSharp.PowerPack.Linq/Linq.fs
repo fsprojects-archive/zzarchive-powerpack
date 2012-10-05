@@ -429,55 +429,75 @@ module QuotationEvaluation =
     let (|ArrayLookupQ|_|) = (|SpecificCall|_|) <@ LanguagePrimitives.IntrinsicFunctions.GetArray : int[] -> int -> int @>
     let (|ArrayAssignQ|_|) = (|SpecificCall|_|) <@ LanguagePrimitives.IntrinsicFunctions.SetArray : int[] -> int -> int -> unit @>
     let (|ArrayTypeQ|_|) (ty:System.Type) = if ty.IsArray && ty.GetArrayRank() = 1 then Some(ty.GetElementType()) else None
+
+    let rec mapCps f xs cont =
+        match xs with
+        | [] -> cont []
+        | x::xs' ->
+            f x (fun x' ->
+            mapCps f xs' (fun xs'' ->
+            x'::xs'' |> cont))
     
     /// Convert F# quotations to LINQ expression trees.
     /// A more polished LINQ-Quotation translator will be published
     /// concert with later versions of LINQ.
-    let rec ConvExpr (env:ConvEnv) (inp:Expr) = 
+    let rec ConvExpr (env:ConvEnv) (inp:Expr) cont =
        //printf "ConvExpr : %A\n" e;
         match inp with 
 
         // Generic cases 
         | Patterns.Var(v) -> 
-                try
-                    Map.find v env.varEnv
-                with
-                |   :? KeyNotFoundException when v.Name = "this" ->
-                        let message = 
-                            "Encountered unxpected variable named 'this'. This might happen because " +
-                            "quotations used in queries can’t contain references to let-bound values in classes unless the quotation literal occurs in an instance member. " +
-                            "If this is the case, workaround by replacing references to implicit fields with references to " +
-                            "local variables, e.g. rewrite\r\n" +
-                            "   type Foo() =\r\n" +
-                            "       let x = 1\r\n" +
-                            "       let bar() = <@ x @>\r\n" +
-                            "as: \r\n" +
-                            "   type Foo() =\r\n" +
-                            "       let x = 1\r\n" +
-                            "       let bar() = let x = x in <@ x @>\r\n";
+            try
+                Map.find v env.varEnv |> cont
+            with
+            |   :? KeyNotFoundException when v.Name = "this" ->
+                    let message = 
+                        "Encountered unxpected variable named 'this'. This might happen because " +
+                        "quotations used in queries can’t contain references to let-bound values in classes unless the quotation literal occurs in an instance member. " +
+                        "If this is the case, workaround by replacing references to implicit fields with references to " +
+                        "local variables, e.g. rewrite\r\n" +
+                        "   type Foo() =\r\n" +
+                        "       let x = 1\r\n" +
+                        "       let bar() = <@ x @>\r\n" +
+                        "as: \r\n" +
+                        "   type Foo() =\r\n" +
+                        "       let x = 1\r\n" +
+                        "       let bar() = let x = x in <@ x @>\r\n";
 
-                        NotSupportedException(message) |> raise    
-        | DerivedPatterns.AndAlso(x1,x2)             -> Expression.AndAlso(ConvExpr env x1, ConvExpr env x2) |> asExpr
-        | DerivedPatterns.OrElse(x1,x2)              -> Expression.OrElse(ConvExpr env x1, ConvExpr env x2)  |> asExpr
-        | Patterns.Value(x,ty)                -> Expression.Constant(x,ty)              |> asExpr
+                    NotSupportedException(message) |> raise    
+        | DerivedPatterns.AndAlso(x1,x2) ->
+            ConvExpr env x1 (fun x1' ->
+            ConvExpr env x2 (fun x2' ->
+            Expression.AndAlso(x1', x2') |> asExpr |> cont))
+        | DerivedPatterns.OrElse(x1,x2) ->
+            ConvExpr env x1 (fun x1' ->
+            ConvExpr env x2 (fun x2' ->
+            Expression.OrElse(x1', x2') |> asExpr |> cont))
+        | Patterns.Value(x,ty) ->
+            Expression.Constant(x,ty) |> asExpr |> cont
 
         // REVIEW: exact F# semantics for TypeAs and TypeIs
-        | Patterns.Coerce(x,toTy)             -> Expression.TypeAs(ConvExpr env x,toTy)     |> asExpr
-        | Patterns.TypeTest(x,toTy)           -> Expression.TypeIs(ConvExpr env x,toTy)     |> asExpr
+        | Patterns.Coerce(x,toTy) ->
+            ConvExpr env x (fun x' ->
+            Expression.TypeAs(x', toTy) |> asExpr |> cont)
+        | Patterns.TypeTest(x,toTy) ->
+            ConvExpr env x (fun x' ->
+            Expression.TypeIs(x', toTy) |> asExpr |> cont)
         
         // Expr.*Get
         | Patterns.FieldGet(objOpt,fieldInfo) -> 
-            Expression.Field(ConvObjArg env objOpt None, fieldInfo) |> asExpr
+            ConvObjArg env objOpt None (fun objOpt' ->
+            Expression.Field(objOpt', fieldInfo) |> asExpr |> cont)
 
         | Patterns.TupleGet(arg,n) -> 
-             let argP = ConvExpr env arg 
+             ConvExpr env arg (fun argP ->
              let rec build ty argP n = 
                  match Reflection.FSharpValue.PreComputeTuplePropertyInfo(ty,n) with 
                  | propInfo,None -> 
                      Expression.Property(argP, propInfo)  |> asExpr
                  | propInfo,Some(nestedTy,n2) -> 
                      build nestedTy (Expression.Property(argP,propInfo) |> asExpr) n2
-             build arg.Type argP n
+             build arg.Type argP n |> cont)
               
         | Patterns.PropertyGet(objOpt,propInfo,args) -> 
             let coerceTo = 
@@ -487,33 +507,36 @@ module QuotationEvaluation =
                     None
             match args with 
             | [] -> 
-                Expression.Property(ConvObjArg env objOpt coerceTo, propInfo) |> asExpr
+                ConvObjArg env objOpt coerceTo (fun objOpt' ->
+                Expression.Property(objOpt', propInfo) |> asExpr |> cont)
             | _ -> 
-                let argsP = ConvExprs env args
-                Expression.Call(ConvObjArg env objOpt coerceTo, propInfo.GetGetMethod(true),argsP) |> asExpr
+                ConvExprs env args (fun argsP ->
+                ConvObjArg env objOpt coerceTo (fun objOpt' ->
+                Expression.Call(objOpt', propInfo.GetGetMethod(true), argsP) |> asExpr |> cont))
 
         // Expr.*Set
         | Patterns.PropertySet(objOpt,propInfo,args,v) -> 
             let args = (args @ [v])
-            let argsP = ConvExprs env args 
+            ConvExprs env args (fun argsP ->
             let minfo = propInfo.GetSetMethod(true)
-            Expression.Call(ConvObjArg env objOpt None, minfo,argsP) |> asExpr |> WrapVoid (IsVoidType minfo.ReturnType) objOpt args env 
+            ConvObjArg env objOpt None (fun objOpt' ->
+            Expression.Call(objOpt', minfo,argsP) |> asExpr |> WrapVoid (IsVoidType minfo.ReturnType) objOpt args env |> cont))
 
         // Expr.(Call,Application)
         | Patterns.Call(objOpt,minfo,args) -> 
             let transComparison x1 x2 exprConstructor exprErasedConstructor (intrinsic : MethodInfo) =
-                let e1 = ConvExpr env x1
-                let e2 = ConvExpr env x2
+                ConvExpr env x1 (fun e1 ->
+                ConvExpr env x2 (fun e2 ->
 
                 if env.eraseEquality then
-                    exprErasedConstructor(e1,e2) |> asExpr
+                    exprErasedConstructor(e1,e2) |> asExpr |> cont
                 else 
-                    exprConstructor(e1, e2, false, intrinsic.MakeGenericMethod([|x1.Type|])) |> asExpr
+                    exprConstructor(e1, e2, false, intrinsic.MakeGenericMethod([|x1.Type|])) |> asExpr |> cont))
 
             match inp with 
             // Special cases for this translation
             |  PlusQ (_, [ty1;ty2;ty3],[x1;x2]) when (ty1 = typeof<string>) && (ty2 = typeof<string>) ->
-                 ConvExpr env (<@@  System.String.Concat( [| %%x1 ; %%x2 |] : string array ) @@>)
+                 ConvExpr env (<@@  System.String.Concat( [| %%x1 ; %%x2 |] : string array ) @@>) cont
 
             //| SpecificCall <@ LanguagePrimitives.GenericEquality @>([ty1],[x1;x2]) 
             //| SpecificCall <@ ( = ) @>([ty1],[x1;x2]) when (ty1 = typeof<string>) ->
@@ -532,73 +555,170 @@ module QuotationEvaluation =
 
             | NotEqQ (_, _,[x1;x2]) ->      transComparison x1 x2 Expression.NotEqual Expression.NotEqual genericNotEqualIntrinsic
 
-            | NotQ (_, _,[x1])    -> Expression.Not(ConvExpr env x1)                                   |> asExpr
+            | NotQ (_, _,[x1])    ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Not(x1') |> asExpr |> cont)
 
 
-            | NegQ (_, _,[x1])    -> Expression.Negate(ConvExpr env x1)                                |> asExpr
-            | PlusQ (_, _,[x1;x2]) -> Expression.Add(ConvExpr env x1, ConvExpr env x2)      |> asExpr
-            | DivideQ (_, _,[x1;x2]) -> Expression.Divide (ConvExpr env x1, ConvExpr env x2)  |> asExpr
-            | MinusQ (_, _,[x1;x2]) -> Expression.Subtract(ConvExpr env x1, ConvExpr env x2) |> asExpr
-            | MultiplyQ (_, _,[x1;x2]) -> Expression.Multiply(ConvExpr env x1, ConvExpr env x2) |> asExpr
-            | ModuloQ (_, _,[x1;x2]) -> Expression.Modulo (ConvExpr env x1, ConvExpr env x2) |> asExpr
+            | NegQ (_, _,[x1])    ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Negate(x1') |> asExpr |> cont)
+            | PlusQ (_, _,[x1;x2]) ->
+                ConvExpr env x1 (fun x1' ->
+                ConvExpr env x2 (fun x2' ->
+                Expression.Add(x1', x2') |> asExpr |> cont))
+            | DivideQ (_, _,[x1;x2]) ->
+                ConvExpr env x1 (fun x1' ->
+                ConvExpr env x2 (fun x2' ->
+                Expression.Divide (x1', x2') |> asExpr |> cont))
+            | MinusQ (_, _,[x1;x2]) ->
+                ConvExpr env x1 (fun x1' ->
+                ConvExpr env x2 (fun x2' ->
+                Expression.Subtract(x1', x2') |> asExpr |> cont))
+            | MultiplyQ (_, _,[x1;x2]) ->
+                ConvExpr env x1 (fun x1' ->
+                ConvExpr env x2 (fun x2' ->
+                Expression.Multiply(x1', x2') |> asExpr |> cont))
+            | ModuloQ (_, _,[x1;x2]) ->
+                ConvExpr env x1 (fun x1' ->
+                ConvExpr env x2 (fun x2' ->
+                Expression.Modulo (x1', x2') |> asExpr |> cont))
                  /// REVIEW: basic arithmetic with method witnesses
                  /// REVIEW: negate,add, divide, multiply, subtract with method witness
 
-            | ShiftLeftQ (_, _,[x1;x2]) -> Expression.LeftShift(ConvExpr env x1, ConvExpr env x2) |> asExpr
-            | ShiftRightQ (_, _,[x1;x2]) -> Expression.RightShift(ConvExpr env x1, ConvExpr env x2) |> asExpr
-            | BitwiseAndQ (_, _,[x1;x2]) -> Expression.And(ConvExpr env x1, ConvExpr env x2) |> asExpr
-            | BitwiseOrQ (_, _,[x1;x2]) -> Expression.Or(ConvExpr env x1, ConvExpr env x2) |> asExpr
-            | BitwiseXorQ (_, _,[x1;x2]) -> Expression.ExclusiveOr(ConvExpr env x1, ConvExpr env x2) |> asExpr
-            | BitwiseNotQ (_, _,[x1]) -> Expression.Not(ConvExpr env x1) |> asExpr
+            | ShiftLeftQ (_, _,[x1;x2]) ->
+                ConvExpr env x1 (fun x1' ->
+                ConvExpr env x2 (fun x2' ->
+                Expression.LeftShift(x1', x2') |> asExpr |> cont))
+            | ShiftRightQ (_, _,[x1;x2]) ->
+                ConvExpr env x1 (fun x1' ->
+                ConvExpr env x2 (fun x2' ->
+                Expression.RightShift(x1', x2') |> asExpr |> cont))
+            | BitwiseAndQ (_, _,[x1;x2]) ->
+                ConvExpr env x1 (fun x1' ->
+                ConvExpr env x2 (fun x2' ->
+                Expression.And(x1', x2') |> asExpr |> cont))
+            | BitwiseOrQ (_, _,[x1;x2]) ->
+                ConvExpr env x1 (fun x1' ->
+                ConvExpr env x2 (fun x2' ->
+                Expression.Or(x1', x2') |> asExpr |> cont))
+            | BitwiseXorQ (_, _,[x1;x2]) ->
+                ConvExpr env x1 (fun x1' ->
+                ConvExpr env x2 (fun x2' ->
+                Expression.ExclusiveOr(x1', x2') |> asExpr |> cont))
+            | BitwiseNotQ (_, _,[x1]) ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Not(x1') |> asExpr |> cont)
                  /// REVIEW: bitwise operations with method witnesses
 
-            | CheckedNeg (_, _,[x1]) -> Expression.NegateChecked(ConvExpr env x1)                                |> asExpr
-            | CheckedPlusQ (_, _,[x1;x2]) -> Expression.AddChecked(ConvExpr env x1, ConvExpr env x2)      |> asExpr
-            | CheckedMinusQ (_, _,[x1;x2]) -> Expression.SubtractChecked(ConvExpr env x1, ConvExpr env x2) |> asExpr
-            | CheckedMultiplyQ (_, _,[x1;x2]) -> Expression.MultiplyChecked(ConvExpr env x1, ConvExpr env x2) |> asExpr
+            | CheckedNeg (_, _,[x1]) ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.NegateChecked(x1') |> asExpr |> cont)
+            | CheckedPlusQ (_, _,[x1;x2]) ->
+                ConvExpr env x1 (fun x1' ->
+                ConvExpr env x2 (fun x2' ->
+                Expression.AddChecked(x1', x2') |> asExpr |> cont))
+            | CheckedMinusQ (_, _,[x1;x2]) ->
+                ConvExpr env x1 (fun x1' ->
+                ConvExpr env x2 (fun x2' ->
+                Expression.SubtractChecked(x1', x2') |> asExpr |> cont))
+            | CheckedMultiplyQ (_, _,[x1;x2]) ->
+                ConvExpr env x1 (fun x1' ->
+                ConvExpr env x2 (fun x2' ->
+                Expression.MultiplyChecked(x1', x2') |> asExpr |> cont))
 
-            | ConvCharQ (_, [ty],[x1])  -> Expression.Convert(ConvExpr env x1, typeof<char>) |> asExpr
-            | ConvDecimalQ (_, [ty],[x1])  -> Expression.Convert(ConvExpr env x1, typeof<decimal>) |> asExpr
-            | ConvFloatQ (_, [ty],[x1])  -> Expression.Convert(ConvExpr env x1, typeof<float>) |> asExpr
-            | ConvFloat32Q (_, [ty],[x1])  -> Expression.Convert(ConvExpr env x1, typeof<float32>) |> asExpr
-            | ConvSByteQ (_, [ty],[x1])  -> Expression.Convert(ConvExpr env x1, typeof<sbyte>) |> asExpr
-            | ConvInt16Q (_, [ty],[x1])  -> Expression.Convert(ConvExpr env x1, typeof<int16>) |> asExpr
-            | ConvInt32Q (_, [ty],[x1])  -> Expression.Convert(ConvExpr env x1, typeof<int32>) |> asExpr
-            | ConvIntQ (_, [ty],[x1])    -> Expression.Convert(ConvExpr env x1, typeof<int32>) |> asExpr
-            | ConvInt64Q (_, [ty],[x1])  -> Expression.Convert(ConvExpr env x1, typeof<int64>) |> asExpr
-            | ConvByteQ (_, [ty],[x1])   -> Expression.Convert(ConvExpr env x1, typeof<byte>) |> asExpr
-            | ConvUInt16Q (_, [ty],[x1]) -> Expression.Convert(ConvExpr env x1, typeof<uint16>) |> asExpr
-            | ConvUInt32Q (_, [ty],[x1]) -> Expression.Convert(ConvExpr env x1, typeof<uint32>) |> asExpr
-            | ConvUInt64Q (_, [ty],[x1]) -> Expression.Convert(ConvExpr env x1, typeof<uint64>) |> asExpr
+            | ConvCharQ (_, [ty],[x1])  ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Convert(x1', typeof<char>) |> asExpr |> cont)
+            | ConvDecimalQ (_, [ty],[x1])  ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Convert(x1', typeof<decimal>) |> asExpr |> cont)
+            | ConvFloatQ (_, [ty],[x1])  ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Convert(x1', typeof<float>) |> asExpr |> cont)
+            | ConvFloat32Q (_, [ty],[x1])  ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Convert(x1', typeof<float32>) |> asExpr |> cont)
+            | ConvSByteQ (_, [ty],[x1])  ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Convert(x1', typeof<sbyte>) |> asExpr |> cont)
+            | ConvInt16Q (_, [ty],[x1])  ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Convert(x1', typeof<int16>) |> asExpr |> cont)
+            | ConvInt32Q (_, [ty],[x1])  ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Convert(x1', typeof<int32>) |> asExpr |> cont)
+            | ConvIntQ (_, [ty],[x1])    ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Convert(x1', typeof<int32>) |> asExpr |> cont)
+            | ConvInt64Q (_, [ty],[x1])  ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Convert(x1', typeof<int64>) |> asExpr |> cont)
+            | ConvByteQ (_, [ty],[x1])   ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Convert(x1', typeof<byte>) |> asExpr |> cont)
+            | ConvUInt16Q (_, [ty],[x1]) ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Convert(x1', typeof<uint16>) |> asExpr |> cont)
+            | ConvUInt32Q (_, [ty],[x1]) ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Convert(x1', typeof<uint32>) |> asExpr |> cont)
+            | ConvUInt64Q (_, [ty],[x1]) ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.Convert(x1', typeof<uint64>) |> asExpr |> cont)
              /// REVIEW: convert with method witness
 
-            | CheckedConvCharQ (_, [ty],[x1])  -> Expression.ConvertChecked(ConvExpr env x1, typeof<char>) |> asExpr
-            | CheckedConvSByteQ (_, [ty],[x1])  -> Expression.ConvertChecked(ConvExpr env x1, typeof<sbyte>) |> asExpr
-            | CheckedConvInt16Q (_, [ty],[x1])  -> Expression.ConvertChecked(ConvExpr env x1, typeof<int16>) |> asExpr
-            | CheckedConvInt32Q (_, [ty],[x1])  -> Expression.ConvertChecked(ConvExpr env x1, typeof<int32>) |> asExpr
-            | CheckedConvInt64Q (_, [ty],[x1])  -> Expression.ConvertChecked(ConvExpr env x1, typeof<int64>) |> asExpr
-            | CheckedConvByteQ (_, [ty],[x1])   -> Expression.ConvertChecked(ConvExpr env x1, typeof<byte>) |> asExpr
-            | CheckedConvUInt16Q (_, [ty],[x1]) -> Expression.ConvertChecked(ConvExpr env x1, typeof<uint16>) |> asExpr
-            | CheckedConvUInt32Q (_, [ty],[x1]) -> Expression.ConvertChecked(ConvExpr env x1, typeof<uint32>) |> asExpr
-            | CheckedConvUInt64Q (_, [ty],[x1]) -> Expression.ConvertChecked(ConvExpr env x1, typeof<uint64>) |> asExpr
+            | CheckedConvCharQ (_, [ty],[x1])  ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.ConvertChecked(x1', typeof<char>) |> asExpr |> cont)
+            | CheckedConvSByteQ (_, [ty],[x1])  ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.ConvertChecked(x1', typeof<sbyte>) |> asExpr |> cont)
+            | CheckedConvInt16Q (_, [ty],[x1])  ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.ConvertChecked(x1', typeof<int16>) |> asExpr |> cont)
+            | CheckedConvInt32Q (_, [ty],[x1])  ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.ConvertChecked(x1', typeof<int32>) |> asExpr |> cont)
+            | CheckedConvInt64Q (_, [ty],[x1])  ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.ConvertChecked(x1', typeof<int64>) |> asExpr |> cont)
+            | CheckedConvByteQ (_, [ty],[x1])   ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.ConvertChecked(x1', typeof<byte>) |> asExpr |> cont)
+            | CheckedConvUInt16Q (_, [ty],[x1]) ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.ConvertChecked(x1', typeof<uint16>) |> asExpr |> cont)
+            | CheckedConvUInt32Q (_, [ty],[x1]) ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.ConvertChecked(x1', typeof<uint32>) |> asExpr |> cont)
+            | CheckedConvUInt64Q (_, [ty],[x1]) ->
+                ConvExpr env x1 (fun x1' ->
+                Expression.ConvertChecked(x1', typeof<uint64>) |> asExpr |> cont)
             | ArrayLookupQ (_, [ArrayTypeQ(elemTy);_;_],[x1;x2]) -> 
-                Expression.ArrayIndex(ConvExpr env x1, ConvExpr env x2) |> asExpr
+                ConvExpr env x1 (fun x1' ->
+                ConvExpr env x2 (fun x2' ->
+                Expression.ArrayIndex(x1', x2') |> asExpr |> cont))
 
             | ArrayAssignQ (_, [ArrayTypeQ(elemTy);_;_],[arr;idx;elem]) -> 
                 let minfo = ArrayAssignMethod.GetGenericMethodDefinition().MakeGenericMethod [| elemTy;typeof<unit> |]
-                Expression.Call(minfo,[| ConvExpr env arr; ConvExpr env idx; ConvExpr env elem |]) |> asExpr
+                ConvExpr env arr (fun arr' ->
+                ConvExpr env idx (fun idx' ->
+                ConvExpr env elem (fun elem' ->
+                Expression.Call(minfo,[| arr'; idx'; elem' |]) |> asExpr |> cont)))
             
             // Throw away markers inserted to satisfy C#'s design where they pass an argument
             // or type T to an argument expecting Expr<T>.
-            | LinqExpressionHelperQ (_, [_],[x1]) -> ConvExpr env x1
+            | LinqExpressionHelperQ (_, [_],[x1]) -> ConvExpr env x1 cont
              
               /// ArrayLength
               /// ListBind
               /// ListInit
               /// ElementInit
             | _ -> 
-                let argsP = ConvExprs env args 
-                Expression.Call(ConvObjArg env objOpt None, minfo, argsP) |> asExpr |> WrapVoid (IsVoidType minfo.ReturnType) objOpt args env 
+                ConvExprs env args (fun argsP ->
+                ConvObjArg env objOpt None (fun objOpt' ->
+                Expression.Call(objOpt', minfo, argsP) |> asExpr |> WrapVoid (IsVoidType minfo.ReturnType) objOpt args env |> cont))
 
         // f x1 x2 x3 x4 --> InvokeFast4
         | Patterns.Application(Patterns.Application(Patterns.Application(Patterns.Application(f,arg1),arg2),arg3),arg4) -> 
@@ -609,8 +729,8 @@ module QuotationEvaluation =
             let (-->) ty1 ty2 = Reflection.FSharpType.MakeFunctionType(ty1,ty2)
             let ty = domainTy1 --> domainTy2 
             let meth = (ty.GetMethods() |> Array.find (fun minfo -> minfo.Name = "InvokeFast" && minfo.GetParameters().Length = 5)).MakeGenericMethod [| domainTy3; domainTy4; rangeTy |]
-            let argsP = ConvExprs env [f; arg1;arg2;arg3; arg4]
-            Expression.Call((null:Expression), meth, argsP) |> asExpr
+            ConvExprs env [f; arg1;arg2;arg3; arg4] (fun argsP ->
+            Expression.Call((null:Expression), meth, argsP) |> asExpr |> cont)
 
         // f x1 x2 x3 --> InvokeFast3
         | Patterns.Application(Patterns.Application(Patterns.Application(f,arg1),arg2),arg3) -> 
@@ -620,8 +740,8 @@ module QuotationEvaluation =
             let (-->) ty1 ty2 = Reflection.FSharpType.MakeFunctionType(ty1,ty2)
             let ty = domainTy1 --> domainTy2 
             let meth = (ty.GetMethods() |> Array.find (fun minfo -> minfo.Name = "InvokeFast" && minfo.GetParameters().Length = 4)).MakeGenericMethod [| domainTy3; rangeTy |]
-            let argsP = ConvExprs env [f; arg1;arg2;arg3]
-            Expression.Call((null:Expression), meth, argsP) |> asExpr
+            ConvExprs env [f; arg1;arg2;arg3] (fun argsP ->
+            Expression.Call((null:Expression), meth, argsP) |> asExpr |> cont)
 
         // f x1 x2 --> InvokeFast2
         | Patterns.Application(Patterns.Application(f,arg1),arg2) -> 
@@ -630,35 +750,37 @@ module QuotationEvaluation =
             let (-->) ty1 ty2 = Reflection.FSharpType.MakeFunctionType(ty1,ty2)
             let ty = domainTy1 --> domainTy2 
             let meth = (ty.GetMethods() |> Array.find (fun minfo -> minfo.Name = "InvokeFast" && minfo.GetParameters().Length = 3)).MakeGenericMethod [| rangeTy |]
-            let argsP = ConvExprs env [f; arg1;arg2]
-            Expression.Call((null:Expression), meth, argsP) |> asExpr
+            ConvExprs env [f; arg1;arg2] (fun argsP ->
+            Expression.Call((null:Expression), meth, argsP) |> asExpr |> cont)
 
         // f x1 --> Invoke
         | Patterns.Application(f,arg) -> 
-            let fP = ConvExpr env f
-            let argP = ConvExpr env arg
+            ConvExpr env f (fun fP ->
+            ConvExpr env arg (fun argP ->
             let meth = f.Type.GetMethod("Invoke")
-            Expression.Call(fP, meth, [| argP |]) |> asExpr
+            Expression.Call(fP, meth, [| argP |]) |> asExpr |> cont))
 
         // Expr.New*
         | Patterns.NewRecord(recdTy,args) -> 
             let ctorInfo = Reflection.FSharpValue.PreComputeRecordConstructorInfo(recdTy,showAll) 
-            Expression.New(ctorInfo,ConvExprs env args) |> asExpr
+            ConvExprs env args (fun args' ->
+            Expression.New(ctorInfo, args') |> asExpr |> cont)
 
         | Patterns.NewArray(ty,args) -> 
-            Expression.NewArrayInit(ty,ConvExprs env args) |> asExpr
+            ConvExprs env args (fun args' ->
+            Expression.NewArrayInit(ty, args') |> asExpr |> cont)
 
         | Patterns.DefaultValue(ty) -> 
-            Expression.New(ty) |> asExpr
+            Expression.New(ty) |> asExpr |> cont
 
         | Patterns.NewUnionCase(unionCaseInfo,args) -> 
             let methInfo = Reflection.FSharpValue.PreComputeUnionConstructorInfo(unionCaseInfo,showAll)
-            let argsR = ConvExprs env args 
-            Expression.Call((null:Expression),methInfo,argsR) |> asExpr
+            ConvExprs env args (fun argsR ->
+            Expression.Call((null:Expression),methInfo,argsR) |> asExpr |> cont)
 
         | Patterns.UnionCaseTest(e,unionCaseInfo) -> 
             let methInfo = Reflection.FSharpValue.PreComputeUnionTagMemberInfo(unionCaseInfo.DeclaringType,showAll)
-            let obj = ConvExpr env e 
+            ConvExpr env e (fun obj ->
             let tagE = 
                 match methInfo with 
                 | :? PropertyInfo as p -> 
@@ -666,74 +788,78 @@ module QuotationEvaluation =
                 | :? MethodInfo as m -> 
                     Expression.Call((null:Expression),m,[| obj |]) |> asExpr
                 | _ -> failwith "unreachable case"
-            Expression.Equal(tagE, Expression.Constant(unionCaseInfo.Tag)) |> asExpr
+            Expression.Equal(tagE, Expression.Constant(unionCaseInfo.Tag)) |> asExpr |> cont)
 
         | Patterns.NewObject(ctorInfo,args) -> 
-            Expression.New(ctorInfo,ConvExprs env args) |> asExpr
+            ConvExprs env args (fun args' ->
+            Expression.New(ctorInfo, args') |> asExpr |> cont)
 
         | Patterns.NewDelegate(dty,vs,b) -> 
-            let vsP = List.map ConvVar vs 
+            mapCps ConvVar vs (fun vsP ->
             let env = {env with varEnv = List.foldBack2 (fun (v:Var) vP -> Map.add v (vP |> asExpr)) vs vsP env.varEnv }
-            let bodyP = ConvExpr env b 
-            Expression.Lambda(dty, bodyP, vsP) |> asExpr 
+            ConvExpr env b (fun bodyP ->
+            Expression.Lambda(dty, bodyP, vsP) |> asExpr |> cont))
 
         | Patterns.NewTuple(args) -> 
              let tupTy = args |> List.map (fun arg -> arg.Type) |> Array.ofList |> Reflection.FSharpType.MakeTupleType
-             let argsP = ConvExprs env args 
+             ConvExprs env args (fun argsP ->
              let rec build ty (argsP: Expression[]) = 
                  match Reflection.FSharpValue.PreComputeTupleConstructorInfo(ty) with 
                  | ctorInfo,None -> Expression.New(ctorInfo,argsP) |> asExpr 
                  | ctorInfo,Some(nestedTy) -> 
                      let n = ctorInfo.GetParameters().Length - 1
                      Expression.New(ctorInfo, Array.append argsP.[0..n-1] [| build nestedTy argsP.[n..] |]) |> asExpr
-             build tupTy argsP
+             build tupTy argsP |> cont)
 
         | Patterns.IfThenElse(g,t,e) -> 
-            Expression.Condition(ConvExpr env g, ConvExpr env t,ConvExpr env e) |> asExpr
+            ConvExpr env g (fun g' ->
+            ConvExpr env t (fun t' ->
+            ConvExpr env e (fun e' ->
+            Expression.Condition(g', t', e') |> asExpr |> cont)))
 
         | Patterns.Sequential (e1,e2) -> 
-            let e1P = ConvExpr env e1
-            let e2P = ConvExpr env e2
+            ConvExpr env e1 (fun e1P ->
+            ConvExpr env e2 (fun e2P ->
             let minfo = match <@@ SequentialHelper @@> with Lambdas(_,Call(_,minfo,_)) -> minfo | _ -> failwith "couldn't find minfo"
             let minfo = minfo.GetGenericMethodDefinition().MakeGenericMethod [| e1.Type; e2.Type |]
-            Expression.Call(minfo,[| e1P; e2P |]) |> asExpr
+            Expression.Call(minfo,[| e1P; e2P |]) |> asExpr |> cont))
 
         | Patterns.Let (v,e,b) -> 
-            let vP = ConvVar v
+            ConvVar v (fun vP ->
             let envinner = { env with varEnv = Map.add v (vP |> asExpr) env.varEnv } 
-            let bodyP = ConvExpr envinner b 
-            let eP = ConvExpr env e
+            ConvExpr envinner b (fun bodyP ->
+            ConvExpr env e (fun eP ->
             let ty = GetFuncType [| v.Type; b.Type |] 
             let lam = Expression.Lambda(ty,bodyP,[| vP |]) |> asExpr
-            Expression.Call(lam,ty.GetMethod("Invoke",instanceBindingFlags),[| eP |]) |> asExpr
+            Expression.Call(lam,ty.GetMethod("Invoke",instanceBindingFlags),[| eP |]) |> asExpr |> cont)))
 
         | Patterns.Lambda(v,body) -> 
-            let vP = ConvVar v
+            ConvVar v (fun vP ->
             let env = { env with varEnv = Map.add v (vP |> asExpr) env.varEnv }
             let tyargs = [| v.Type; body.Type |]
-            let bodyP = ConvExpr env body
+            ConvExpr env body (fun bodyP ->
             let convType = typedefof<System.Converter<obj,obj>>.MakeGenericType tyargs
             let convDelegate = Expression.Lambda(convType, bodyP, [| vP |]) |> asExpr
-            Expression.Call(typeof<FuncConvert>,"ToFSharpFunc",tyargs,[| convDelegate |]) |> asExpr
+            Expression.Call(typeof<FuncConvert>,"ToFSharpFunc",tyargs,[| convDelegate |]) |> asExpr |> cont))
     
         | Patterns.WhileLoop(gd,b) -> 
-            let gdP = ConvExpr env <@@ (fun () -> (%%gd:bool)) @@>
-            let bP = ConvExpr env <@@ (fun () -> (%%b:unit)) @@>
+            ConvExpr env <@@ (fun () -> (%%gd:bool)) @@> (fun gdP ->
+            ConvExpr env <@@ (fun () -> (%%b:unit)) @@> (fun bP ->
             let minfo = WhileMethod.GetGenericMethodDefinition().MakeGenericMethod [| typeof<unit> |]
-            Expression.Call(minfo,[| gdP; bP |]) |> asExpr
+            Expression.Call(minfo,[| gdP; bP |]) |> asExpr |> cont))
         
         | Patterns.TryFinally(e,h) -> 
-            let eP = ConvExpr env (Expr.Lambda(new Var("unitVar",typeof<unit>), e))
-            let hP = ConvExpr env <@@ (fun () -> (%%h:unit)) @@>
+            ConvExpr env (Expr.Lambda(new Var("unitVar",typeof<unit>), e)) (fun eP ->
+            ConvExpr env <@@ (fun () -> (%%h:unit)) @@> (fun hP ->
             let minfo = TryFinallyMethod.GetGenericMethodDefinition().MakeGenericMethod [| e.Type |]
-            Expression.Call(minfo,[| eP; hP |]) |> asExpr
+            Expression.Call(minfo,[| eP; hP |]) |> asExpr |> cont))
         
         | Patterns.TryWith(e,vf,filter,vh,handler) -> 
-            let eP = ConvExpr env (Expr.Lambda(new Var("unitVar",typeof<unit>), e))
-            let filterP = ConvExpr env (Expr.Lambda(vf,filter))
-            let handlerP = ConvExpr env (Expr.Lambda(vh,handler))
+            ConvExpr env (Expr.Lambda(new Var("unitVar",typeof<unit>), e)) (fun eP ->
+            ConvExpr env (Expr.Lambda(vf,filter)) (fun filterP ->
+            ConvExpr env (Expr.Lambda(vh,handler)) (fun handlerP ->
             let minfo = TryWithMethod.GetGenericMethodDefinition().MakeGenericMethod [| e.Type |]
-            Expression.Call(minfo,[| eP; filterP; handlerP |]) |> asExpr
+            Expression.Call(minfo,[| eP; filterP; handlerP |]) |> asExpr |> cont)))
 
         | Patterns.LetRecursive(binds,body) -> 
 
@@ -769,13 +895,13 @@ module QuotationEvaluation =
             let vfdTys    = pass1 |> List.map (fun (vf,vx,expr,domainTy,rangeTy,vfdTy,vfd) -> vfdTy) |> Array.ofList
             let vfds      = pass1 |> List.map (fun (vf,vx,expr,domainTy,rangeTy,vfdTy,vfd) -> vfd)
 
-            let FPs = 
-                [| for (vf,vx,expr,domainTy,rangeTy,vfdTy,vfd) in pass1 do
-                      let expr = rw expr
-                      let tyF = GetFuncType (Array.append vfdTys [| vx.Type; expr.Type |])
-                      let F = Expr.NewDelegate(tyF,vfds@[vx],expr)
-                      let FP = ConvExpr env F
-                      yield FP |]
+            let f (vf, vx : Var, expr, domainTy, rangeTy, vfdTy, vfd) cont =
+              let expr = rw expr
+              let tyF = GetFuncType (Array.append vfdTys [| vx.Type; expr.Type |])
+              let F = Expr.NewDelegate(tyF,vfds@[vx],expr)
+              ConvExpr env F cont
+            mapCps f pass1 (fun fPs ->
+            let FPs = Array.ofList fPs
 
             let body = rw body
 
@@ -786,7 +912,7 @@ module QuotationEvaluation =
                    yield body.Type |]
 
             let B = Expr.NewDelegate(GetFuncType (Array.append vfdTys [| body.Type |]),vfds,body)
-            let BP = ConvExpr env B
+            ConvExpr env B (fun BP ->
 
             let minfo = 
                 let q = 
@@ -803,7 +929,7 @@ module QuotationEvaluation =
                 match q with Lambdas(_,Call(_,minfo,_)) -> minfo | _ -> failwith "couldn't find minfo"
 
             let minfo = minfo.GetGenericMethodDefinition().MakeGenericMethod methTys
-            Expression.Call(minfo,Array.append FPs [| BP |]) |> asExpr
+            Expression.Call(minfo,Array.append FPs [| BP |]) |> asExpr |> cont))
 
         | Patterns.AddressOf _ -> raise <| new NotSupportedException("Address-of expressions may not be converted to LINQ expressions")
         | Patterns.AddressSet _ -> raise <| new NotSupportedException("Address-set expressions may not be converted to LINQ expressions")
@@ -812,24 +938,24 @@ module QuotationEvaluation =
         | _ -> 
             raise <| new NotSupportedException(sprintf "Could not convert the following F# Quotation to a LINQ Expression Tree\n--------\n%A\n-------------\n" inp)
 
-    and ConvObjArg env objOpt coerceTo : Expression = 
+    and ConvObjArg env objOpt coerceTo (cont : Expression -> Expression) =
         match objOpt with
         | Some(obj) -> 
-            let expr = ConvExpr env obj
+            ConvExpr env obj (fun expr ->
             match coerceTo with 
-            | None -> expr
-            | Some ty -> Expression.TypeAs(expr, ty) :> Expression
+            | None -> expr |> cont
+            | Some ty -> Expression.TypeAs(expr, ty) :> Expression |> cont)
         | None -> 
-            null
+            null |> cont
 
-    and ConvExprs env es : Expression[] = 
-        es |> List.map (ConvExpr env) |> Array.ofList 
+    and ConvExprs env es cont =
+        mapCps (ConvExpr env) es (fun xs -> xs |> Array.ofList |> cont)
 
-    and ConvVar (v: Var) = 
+    and ConvVar (v: Var) cont =
         //printf "** Expression .Parameter(%a, %a)\n" output_any ty output_any nm;
-        Expression.Parameter(v.Type, v.Name)
+        Expression.Parameter(v.Type, v.Name) |> cont
 
-    let Conv (e: #Expr,eraseEquality) = ConvExpr { eraseEquality = eraseEquality; varEnv = Map.empty } (e :> Expr)
+    let Conv (e: #Expr,eraseEquality) = ConvExpr { eraseEquality = eraseEquality; varEnv = Map.empty } (e :> Expr) id
 
     let CompileImpl (e: #Expr, eraseEquality) = 
        let ty = e.Type
