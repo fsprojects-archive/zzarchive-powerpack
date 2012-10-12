@@ -379,6 +379,9 @@ module Implementation =
 #if DEBUG
                     if Flags.debug then Console.Write("reduce popping {0} values/states, lookahead {1}", n, report haveLookahead lookaheadToken);
 #endif
+                    
+                    lhsPos.[0] <- Position.Empty;                                                                     
+                    lhsPos.[1] <- Position.Empty;  
                     for i = 0 to n - 1 do                                                                             
                         if valueStack.IsEmpty then failwith "empty symbol stack";
                         let topVal = valueStack.Peep()
@@ -387,17 +390,10 @@ module Implementation =
                         ruleValues.[(n-i)-1] <- topVal.value;  
                         ruleStartPoss.[(n-i)-1] <- topVal.startPos;  
                         ruleEndPoss.[(n-i)-1] <- topVal.endPos;  
-                        if i = 0 then lhsPos.[1] <- topVal.endPos;                                     
-                        if i = n - 1 then lhsPos.[0] <- topVal.startPos
-                    done;                                                                                             
-                    // Use the lookahead token to populate the locations if the rhs is empty                        
-                    if n = 0 then 
-                        if haveLookahead then 
-                           lhsPos.[0] <- lookaheadStartPos;                                                                     
-                           lhsPos.[1] <- lookaheadEndPos;                                                                       
-                        else 
-                           lhsPos.[0] <- lexbuf.StartPos;
-                           lhsPos.[1] <- lexbuf.EndPos;
+                        if lhsPos.[1] = Position.Empty then lhsPos.[1] <- topVal.endPos;
+                        if not (topVal.startPos = Position.Empty) then lhsPos.[0] <- topVal.startPos
+                    done;                                                                                           
+                    
                     try                                                                                               
                           // Printf.printf "reduce %d\n" prod;                                                       
                         let redResult = reduction parseState                                                          
