@@ -14,12 +14,12 @@ let newline (lexbuf:LexBuffer<_>) = lexbuf.EndPos <- lexbuf.EndPos.NextLine
 let unexpected_char lexbuf =
   failwith ("Unexpected character '"+(lexeme lexbuf)+"'")
 
-let gettype (s:string) = 
-    if s.Contains("<") then 
-        let n = s.IndexOf("<")in 
-        let m = s.IndexOf(">")in 
-        Some s.[n+1 .. m-1] 
-    else None
+let typeDepth = ref 0
+let startPos = ref Position.Empty
+let mutable str_buf = new System.Text.StringBuilder()
+
+let appendBuf (str:string) = str_buf.Append str |> ignore
+let clearBuf () = str_buf <- new System.Text.StringBuilder()
 
 } 
 
@@ -30,15 +30,15 @@ let newline = ('\n' | '\r' '\n')
 let ident_start_char = letter       
 let ident_char = ( ident_start_char| digit | ['\'' '_'] )
 let ident = ident_start_char ident_char*
-let typ = '<' [^ '\n' '\r' '>']+ '>' 
 
 rule token = parse
  | "%{" { let p = lexbuf.StartPos in header p (new StringBuilder 100) lexbuf }
  | "%%" { PERCENT_PERCENT }
- | "%token" ((whitespace* typ)?) { TOKEN (gettype (lexeme lexbuf)) }
+ | "%token" (whitespace* '<') { typeDepth := 1; startPos := lexbuf.StartPos; clearBuf(); TOKEN (fs_type lexbuf) }
+ | "%token" { TOKEN (None) }
  | "%start"{ START }
  | "%prec"{ PREC }
- | "%type" (whitespace* typ) { TYPE (match gettype (lexeme lexbuf) with Some x -> x | None -> failwith "gettype") }
+ | "%type" (whitespace* '<') { typeDepth := 1; startPos := lexbuf.StartPos; clearBuf(); TYPE (match fs_type lexbuf with Some x -> x | None -> failwith "gettype") }
  | "%left" { LEFT }
  | "%right" { RIGHT }
  | "%nonassoc" { NONASSOC }
@@ -59,7 +59,17 @@ rule token = parse
  | "//" [^'\n''\r']* {  token lexbuf  }
  | ':' { COLON }
  | _ { unexpected_char lexbuf }     
- | eof { EOF  }                                     
+ | eof { EOF  }  
+
+and fs_type = parse
+  | '<' { incr typeDepth; appendBuf(lexeme lexbuf); fs_type lexbuf}
+  | '>'
+    { decr typeDepth; 
+      if !typeDepth = 0
+      then Some(string str_buf) 
+      else appendBuf(lexeme lexbuf); fs_type lexbuf }
+  | _ { appendBuf(lexeme lexbuf); fs_type lexbuf } 
+                                   
 and header p buff = parse
  | "%}" { HEADER (buff.ToString(), p) }
  | newline { newline lexbuf; 
