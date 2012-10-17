@@ -99,10 +99,15 @@ let main() =
 
     if (!light = Some(false)) || (!light = None && (Path.HasExtension(output) && Path.GetExtension(output) = ".ml")) then
         cfprintfn os "#light \"off\"";
+    
+    let printLinesIfCodeDefined (code,pos:Position) =
+        if pos <> Position.Empty  // If bottom code is unspecified, then position is empty.        
+        then 
+            cfprintfn os "# %d \"%s\"" pos.Line pos.FileName;
+            cfprintfn os "%s" code;
 
-    let (code,pos) = spec.TopCode
-    cfprintfn os "# %d \"%s\"" pos.Line pos.FileName;
-    cfprintfn os "%s" code;
+    printLinesIfCodeDefined spec.TopCode
+    let code = fst spec.TopCode
     lineCount := !lineCount + code.Replace("\r","").Split([| '\n' |]).Length;
     cfprintfn os "# %d \"%s\"" !lineCount output;
     
@@ -206,10 +211,10 @@ let main() =
             cfprintfn os "          )")
         cfprintfn os "  | _ -> failwith \"%s\"" ident
     
-    let (code,pos) = spec.BottomCode
+
     cfprintfn os "";
-    cfprintfn os "# %d \"%s\"" pos.Line pos.FileName;
-    cfprintfn os "%s" code;
+        
+    printLinesIfCodeDefined spec.BottomCode
     cfprintfn os "# 3000000 \"%s\"" output;
     
   with e -> 
