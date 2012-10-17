@@ -36,10 +36,10 @@ FsYacc/fsyaccpars.fs
 FsYacc/fsyaccpars.fsi
 
 # Ignore doc
-src/FSharp.Compiler.CodeDom/FSharp.Compiler.CodeDom.xml
-src/FSharp.PowerPack.Build.Tasks/FSharp.PowerPack.Build.Tasks.xml
-src/FSharp.PowerPack.Compatibility/FSharp.PowerPack.Compatibility.xml
-src/FSharp.PowerPack.Linq/FSharp.PowerPack.Linq.xml
-src/FSharp.PowerPack.Metadata/FSharp.PowerPack.Metadata.xml
-src/FSharp.PowerPack.Parallel.Seq/FSharp.PowerPack.Parallel.Seq.xml
-src/FSharp.PowerPack/FSharp.PowerPack.xml
+FSharp.Compiler.CodeDom/FSharp.Compiler.CodeDom.xml
+FSharp.PowerPack.Build.Tasks/FSharp.PowerPack.Build.Tasks.xml
+FSharp.PowerPack.Compatibility/FSharp.PowerPack.Compatibility.xml
+FSharp.PowerPack.Linq/FSharp.PowerPack.Linq.xml
+FSharp.PowerPack.Metadata/FSharp.PowerPack.Metadata.xml
+FSharp.PowerPack.Parallel.Seq/FSharp.PowerPack.Parallel.Seq.xml
+FSharp.PowerPack/FSharp.PowerPack.xml
