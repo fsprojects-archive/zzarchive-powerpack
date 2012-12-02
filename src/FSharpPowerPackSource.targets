@@ -11,9 +11,9 @@
     <IntermediateOutputPath Condition="'$(TargetFramework)' == ''">obj\$(Configuration)</IntermediateOutputPath>    
     <IntermediateOutputPath Condition="'$(TargetFramework)' == 'Silverlight'">obj\$(TargetFramework)\$(SilverlightVersion)\$(Configuration)</IntermediateOutputPath>
     <FsLexToolPath>$(FSharpPowerPackSourcesRoot)\..\lkg\FSharp.PowerPack-$(LkgVersion)\bin</FsLexToolPath>
-    <FsLexToolExe>fslex.exe</FsLexToolExe>
+    <FsLexToolExe>FsLex.exe</FsLexToolExe>
     <FsYaccToolPath>$(FSharpPowerPackSourcesRoot)\..\lkg\FSharp.PowerPack-$(LkgVersion)\bin</FsYaccToolPath>
-    <FsYaccToolExe>fsyacc.exe</FsYaccToolExe>
+    <FsYaccToolExe>FsYacc.exe</FsYaccToolExe>
     
   </PropertyGroup>
 

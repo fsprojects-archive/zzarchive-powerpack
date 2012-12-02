@@ -40,8 +40,8 @@
     <Compile Include="assemblyinfo.FSharp.PowerPack.Parallel.Seq.dll.fs">
       <Link>assemblyinfo.FSharp.PowerPack.Parallel.Seq.dll.fs</Link>
     </Compile>
-    <Compile Include="PSeq.fsi" />
-    <Compile Include="PSeq.fs" />
+    <Compile Include="pseq.fsi" />
+    <Compile Include="pseq.fs" />
     <Compile Include="Assembly.fs" />
     <None Include="PSeq.fsx" />
   </ItemGroup>
