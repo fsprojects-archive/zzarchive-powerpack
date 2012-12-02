@@ -39,27 +39,27 @@
       <Link>assemblyinfo.Common.fs</Link>
     </Compile>
     <Compile Include="assemblyinfo.fslex.exe.fs" />
-    <Compile Include="..\FSharp.PowerPack\lexing.fsi">
+    <Compile Include="..\FSharp.PowerPack\Lexing.fsi">
       <Link>lexing.fsi</Link>
     </Compile>
-    <Compile Include="..\FSharp.PowerPack\lexing.fs">
+    <Compile Include="..\FSharp.PowerPack\Lexing.fs">
       <Link>lexing.fs</Link>
     </Compile>
-    <Compile Include="..\FSharp.PowerPack\parsing.fsi">
+    <Compile Include="..\FSharp.PowerPack\Parsing.fsi">
       <Link>parsing.fsi</Link>
     </Compile>
-    <Compile Include="..\FSharp.PowerPack\parsing.fs">
+    <Compile Include="..\FSharp.PowerPack\Parsing.fs">
       <Link>parsing.fs</Link>
     </Compile>
-    <Compile Include="..\FSharp.PowerPack\arg.fsi">
+    <Compile Include="..\FSharp.PowerPack\Arg.fsi">
       <Link>arg.fsi</Link>
     </Compile>
-    <Compile Include="..\FSharp.PowerPack\arg.fs">
+    <Compile Include="..\FSharp.PowerPack\Arg.fs">
       <Link>arg.fs</Link>
     </Compile>
     <Compile Include="fslexast.fs" />
-    <Compile Include="fslexpars.fs" />
-    <Compile Include="fslexlex.fs" />
+    <Compile Include="fslexpars.fsy" />
+    <Compile Include="fslexlex.fsl" />
     <Compile Include="fslex.fs" />
   </ItemGroup>
   <ItemGroup>
