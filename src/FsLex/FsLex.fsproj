@@ -58,8 +58,8 @@
       <Link>arg.fs</Link>
     </Compile>
     <Compile Include="fslexast.fs" />
-    <Compile Include="fslexpars.fsy" />
-    <Compile Include="fslexlex.fsl" />
+    <Compile Include="fslexpars.fs" />
+    <Compile Include="fslexlex.fs" />
     <Compile Include="fslex.fs" />
   </ItemGroup>
   <ItemGroup>
