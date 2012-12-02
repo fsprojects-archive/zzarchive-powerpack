@@ -31,7 +31,7 @@
     <Compile Include="..\assemblyinfo.Common.fs">
       <Link>assemblyinfo.Common.fs</Link>
     </Compile>
-    <Compile Include="assemblyinfo.fs" />
+    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="StructuredFormat.fsi" />
     <Compile Include="StructuredFormat.fs" />
     <Compile Include="math\q.fsi">
