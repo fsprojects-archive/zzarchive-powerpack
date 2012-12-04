@@ -15,7 +15,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{DDD90630-1CDA-4CB3-9A0A-6A1253478C2D}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <AssemblyName>fsyacc</AssemblyName>
+    <AssemblyName>FsYacc</AssemblyName>
     <TreatWarningsAsErrors>
     </TreatWarningsAsErrors>
     <!-- 5310 tracks reenabling -->
