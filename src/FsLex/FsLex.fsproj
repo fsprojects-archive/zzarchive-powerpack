@@ -17,7 +17,7 @@
     </TreatWarningsAsErrors>
     <!-- 5310 tracks reenabling -->
     <OutputType>Exe</OutputType>
-    <AssemblyName>fslex</AssemblyName>
+    <AssemblyName>FsLex</AssemblyName>
     <DefineConstants>INTERNALIZED_POWER_PACK;$(DefineConstants)</DefineConstants>
     <AllowCrossTargeting>true</AllowCrossTargeting>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
