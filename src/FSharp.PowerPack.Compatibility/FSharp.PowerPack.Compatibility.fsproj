@@ -15,7 +15,7 @@
     <ProjectGuid>{6fc3b299-23cb-4098-998d-06c014431807}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>FSharp.PowerPack.Compatibility</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TreatWarningsAsErrors>
     </TreatWarningsAsErrors>
     <DocumentationFile>FSharp.PowerPack.Compatibility.xml</DocumentationFile>
