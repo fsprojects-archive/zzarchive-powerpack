@@ -18,7 +18,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>FSharp.PowerPack.Unittests</RootNamespace>
     <AssemblyName>FSharp.PowerPack.Unittests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StrongName>false</StrongName>
     <!--->ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB}</ProjectTypeGuids-->
@@ -85,6 +85,7 @@
     <Reference Include="mscorlib" />    
     <Reference Include="System" />
     <Reference Include="System.Core"/>
+    <Reference Include="System.Numerics" Condition="'$(TargetFrameworkVersion)' == 'v4.0'" />
     <Reference Condition="'$(TargetFramework)' == ''" Include="System.Data" />
     <Reference Condition="'$(TargetFramework)' == ''" Include="System.Data.Linq" />
     <Reference Condition="'$(TargetFramework)' == ''" Include="System.Drawing" />
