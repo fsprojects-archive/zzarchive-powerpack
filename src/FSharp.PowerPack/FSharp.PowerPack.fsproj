@@ -15,7 +15,7 @@
     <ProjectGuid>{649FA588-F02E-457C-9FCF-87E46407481F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>FSharp.PowerPack</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TreatWarningsAsErrors>
     </TreatWarningsAsErrors>
     <DocumentationFile>FSharp.PowerPack.xml</DocumentationFile>
@@ -108,6 +108,7 @@
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
+    <Reference Include="System.Numerics" Condition="'$(TargetFrameworkVersion)' == 'v4.0'" />
     <Reference Condition="'$(TargetFramework)' == 'Silverlight'" Include="System.Net" />    
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="!Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
