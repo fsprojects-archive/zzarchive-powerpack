@@ -22,7 +22,4 @@ type FsYacc =
     member Open : string with set
     member Module   : string with set
     member ToolPath   : string with set
-#if FX_ATLEAST_35
-#else
-    member ToolExe   : string with set    
-#endif
+    override ToolExe   : string with set    

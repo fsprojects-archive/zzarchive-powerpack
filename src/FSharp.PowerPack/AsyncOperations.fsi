@@ -61,21 +61,3 @@ namespace Microsoft.FSharp.Control
             static member AsyncOpen: path:string * mode:FileMode * ?access: FileAccess * ?share: FileShare * ?bufferSize: int * ?options: FileOptions -> Async<FileStream>
 #endif
 
-#if FX_NO_WEB_REQUESTS
-#else
-    [<AutoOpen>]
-    module WebRequestExtensions =
-        type System.Net.WebRequest with 
-            /// Return an asynchronous computation that, when run, will wait for a response to the given WebRequest.
-            [<System.Obsolete("The extension method now resides in the 'WebExtensions' module in the F# core library. Please add 'open Microsoft.FSharp.Control.WebExtensions' to access this method")>]
-            member AsyncGetResponse : unit -> Async<System.Net.WebResponse>
-#endif
-    
-#if FX_NO_WEB_CLIENT
-#else
-    [<AutoOpen>]
-    module WebClientExtensions =
-        type System.Net.WebClient with
-            [<System.Obsolete("The extension method now resides in the 'WebExtensions' module in the F# core library. Please add 'open Microsoft.FSharp.Control.WebExtensions' to access this method")>]
-            member AsyncDownloadString : address:System.Uri -> Async<string>
-#endif

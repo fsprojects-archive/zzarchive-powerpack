@@ -34,7 +34,10 @@ let command (s:string) =
     p.ExitCode
 #endif
 
+#if FX_NO_SET_CURRENT_DIRECTORY
+#else
 let chdir (s:string) = System.IO.Directory.SetCurrentDirectory(s)
+#endif
 let getcwd () = System.IO.Directory.GetCurrentDirectory()
 
 let word_size = sizeof<int> * 8

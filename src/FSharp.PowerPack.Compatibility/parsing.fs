@@ -33,7 +33,7 @@ let symbol_end_pos ()     = parse_information.ResultRange   |> snd |> enforce_no
 let rhs_start_pos (n:int) = parse_information.InputRange(n) |> fst |> enforce_nonnull_pos
 let rhs_end_pos (n:int)   = parse_information.InputRange(n) |> snd |> enforce_nonnull_pos
 
-exception Parse_error  = RecoverableParseError
+exception Parse_error  = RecoverableParseErrorException
 let parse_error s = parse_information.RaiseError()(failwith s : unit)
 
 let symbol_start () = (symbol_start_pos()).pos_cnum

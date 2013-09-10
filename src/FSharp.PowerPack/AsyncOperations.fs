@@ -152,16 +152,3 @@ namespace Microsoft.FSharp.Control
             member req.GetResponseAsync() = callFSharpCoreAsyncGetResponse req // this calls the FSharp.Core method
 #endif
      
-#if FX_NO_WEB_CLIENT
-#else
-    [<AutoOpen>]
-    module WebClientExtensions =
-        open System.Net
-        open Microsoft.FSharp.Control.WebExtensions
-        
-        let callFSharpCoreAsyncDownloadString (req: System.Net.WebClient) address = req.AsyncDownloadString address
-
-        type WebClient with
-            member this.AsyncDownloadString address = callFSharpCoreAsyncDownloadString this address
-#endif
-

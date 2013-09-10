@@ -984,70 +984,70 @@ type public QuotationEvalTests() =
         test "vrenjkr90kj1" 
            (match <@ seq { for x in [1] -> x } @> with 
             | Seq(Delay(FinalFor(v,Coerce(sq,_),res))) when sq = <@@ [1] @@> && res = Expr.Var(v) -> true
-            | Seq(Delay(FinalFor(v,sq,res))) -> printfn "v = %A, res = %A, sq = %A" v res sq; false
-            | Seq(Delay(sq)) -> printfn "Seq(Delay(_)), tm = %A" sq; false
-            | Seq(sq) -> printfn "Seq(_), tm = %A" sq; false 
-            | sq -> printfn "tm = %A" sq; false) 
+            | Seq(Delay(FinalFor(v,sq,res))) -> (* printfn "v = %A, res = %A, sq = %A" v res sq; *) false
+            | Seq(Delay(sq)) -> (* printfn "Seq(Delay(_)), tm = %A" sq; *) false
+            | Seq(sq) -> (* printfn "Seq(_), tm = %A" sq; *) false 
+            | sq -> (* printfn "tm = %A" sq; *) false) 
 
         test "vrenjkr90kj2" 
            (match <@ seq { for x in [1] do yield x } @> with 
             | Seq(Delay(FinalFor(v,Coerce(sq,_),res))) when sq = <@@ [1] @@> && res = Expr.Var(v) -> true
-            | sq -> printfn "tm = %A" sq; false) 
+            | sq -> (* printfn "tm = %A" sq; *) false) 
 
         test "vrenjkr90kj3" 
            (match <@ seq { for x in [1] do for y in [2] do yield x } @> with 
             | Seq(Delay(OuterFor(v1,Coerce(sq1,_),FinalFor(v2,Coerce(sq2,_),res)))) when sq1 = <@@ [1] @@> && sq2 = <@@ [2] @@> && res = Expr.Var(v1) -> true
-            | sq -> printfn "tm = %A" sq; false) 
+            | sq -> (* printfn "tm = %A" sq; *) false) 
 
         test "vrenjkr90kj4" 
            (match <@ seq { if true then yield 1 else yield 2 } @> with 
             | Seq(Delay(IfThenElse(_,Yield(Int32(1)),Yield(Int32(2))))) -> true
-            | sq -> printfn "tm = %A" sq; false) 
+            | sq -> (* printfn "tm = %A" sq; *) false) 
 
         test "vrenjkr90kj5" 
            (match <@ seq { for x in [1] do if true then yield x else yield 2 } @> with 
             | Seq(Delay(OuterFor(vx,Coerce(sq,_),IfThenElse(_,Yield(res),Yield(Int32(2)))))) when sq = <@@ [1] @@>  && res = Expr.Var(vx) -> true
-            | sq -> printfn "tm = %A" sq; false) 
+            | sq -> (* printfn "tm = %A" sq; *) false) 
 
         test "vrenjkr90kj6" 
            (match <@ seq { yield 1; yield 2 } @> with 
             | Seq(Delay(Append(Yield(Int32(1)),Delay(Yield(Int32(2)))))) -> true
-            | sq -> printfn "tm = %A" sq; false) 
+            | sq -> (* printfn "tm = %A" sq; *) false) 
 
         test "vrenjkr90kj7" 
            (match <@ seq { while true do yield 1 } @> with 
             | Seq(Delay(While(Lambda(_,Bool(true)),Delay(Yield(Int32(1)))))) -> true
-            | sq -> printfn "tm = %A" sq; false) 
+            | sq -> (* printfn "tm = %A" sq; *) false) 
 
         test "vrenjkr90kj8" 
            (match <@ seq { while true do yield 1 } @> with 
             | Seq(Delay(While(Lambda(_,Bool(true)),Delay(Yield(Int32(1)))))) -> true
-            | sq -> printfn "tm = %A" sq; false) 
+            | sq -> (* printfn "tm = %A" sq; *) false) 
 
         test "vrenjkr90kj9" 
            (match <@ seq { try yield 1 finally () } @> with 
             | Seq(Delay(TryFinally(Delay(Yield(Int32(1))), Lambda(_,Unit)))) -> true
-            | sq -> printfn "tm = %A" sq; false) 
+            | sq -> (* printfn "tm = %A" sq; *) false) 
 
         test "vrenjkr90kj9" 
            (match <@ seq { use ie = failwith "" in yield! Seq.empty } @> with 
             | Seq(Delay(Using(v1,e1,Empty))) when v1.Name = "ie" -> true
-            | sq -> printfn "tm = %A" sq; false) 
+            | sq -> (* printfn "tm = %A" sq; *) false) 
 
         test "vrenjkr90kjA" 
            (match <@ (3 :> obj) @> with 
             | Coerce(Int32(3),ty) when ty = typeof<obj> -> true
-            | sq -> printfn "tm = %A" sq; false) 
+            | sq -> (* printfn "tm = %A" sq; *) false) 
 
         test "vrenjkr90kjB" 
            (match <@ ("3" :> obj) @> with 
             | Coerce(String("3"),ty) when ty = typeof<obj> -> true
-            | sq -> printfn "tm = %A" sq; false) 
+            | sq -> (* printfn "tm = %A" sq; *) false) 
 
         test "vrenjkr90kjC" 
            (match <@ ("3" :> System.IComparable) @> with 
             | Coerce(String("3"),ty) when ty = typeof<System.IComparable> -> true
-            | sq -> printfn "tm = %A" sq; false) 
+            | sq -> (* printfn "tm = %A" sq; *) false) 
 
 (*
     test "vrenjkr90kjD" 
@@ -1232,12 +1232,12 @@ module IQueryableTests =
     let data = [c1;c2;c3;c4]
     let db = System.Linq.Queryable.AsQueryable<Customer>(data |> List.toSeq)
 
-    printfn "db = %A" (Reflection.FSharpType.GetRecordFields (typeof<Customer>, System.Reflection.BindingFlags.Public ||| System.Reflection.BindingFlags.NonPublic))
+    //printfn "db = %A" (Reflection.FSharpType.GetRecordFields (typeof<Customer>, System.Reflection.BindingFlags.Public ||| System.Reflection.BindingFlags.NonPublic))
     let q1 = <@ seq { for i in db -> i.Name } @>
     let q2 = <@ c1.Name @>
-    printfn "q2 = %A" q2
+    //printfn "q2 = %A" q2
     
-    printfn "db = %A" db.Expression
+    //printfn "db = %A" db.Expression
 
     let checkCommuteSeq s q =
         check s (query q |> Seq.toList) (q.Eval() |> Seq.toList)

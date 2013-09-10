@@ -116,12 +116,6 @@ type public ZZZ_LazyListTests() =
     [<Test>]
     member this.PatternsTests() = 
 
-        let matchTwo ll = 
-            match ll with 
-            | LazyList.Cons(h1,LazyList.Cons(h2,t)) -> printf "%O,%O\n" h1 h2
-            | LazyList.Cons(h1,t) -> printf "%O\n" h1
-            | LazyList.Nil() -> printf "empty!\n" 
-
         let rec pairReduce xs =
           match xs with
             | LazyList.Cons (x, LazyList.Cons (y,ys)) -> LazyList.consDelayed (x+y) (fun () -> pairReduce ys)

@@ -103,13 +103,25 @@ type Tables<'tok> =
     member Interpret :  lexer:(LexBuffer<'char> -> 'tok) * lexbuf:LexBuffer<'char> * startState:int -> obj 
 
 #if INTERNALIZED_POWER_PACK
-exception internal Accept of obj
-exception internal RecoverableParseError
+/// Indicates an accept action has occured
+type internal Accept = 
+     inherit System.Exception
+     new : obj -> Accept
+
+/// Indicates a parse error has occured and parse recovery is in progress
+type internal RecoverableParseErrorException = 
+     inherit System.Exception
+     new : unit -> RecoverableParseErrorException
 #else
 /// Indicates an accept action has occured
-exception Accept of obj
+type Accept = 
+     inherit System.Exception
+     new : obj -> Accept
+
 /// Indicates a parse error has occured and parse recovery is in progress
-exception RecoverableParseError
+type RecoverableParseErrorException = 
+     inherit System.Exception
+     new : unit -> RecoverableParseErrorException
 #endif
 
 #if DEBUG

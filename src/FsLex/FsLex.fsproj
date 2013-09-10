@@ -6,6 +6,7 @@
     <SccProvider>SAK</SccProvider>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <Import Project="$(FSharpPowerPackSourcesRoot)\FSharpPowerPackSource.Settings.targets" />
   <PropertyGroup>
@@ -17,10 +18,10 @@
     </TreatWarningsAsErrors>
     <!-- 5310 tracks reenabling -->
     <OutputType>Exe</OutputType>
-    <AssemblyName>FsLex</AssemblyName>
+    <AssemblyName>fslex</AssemblyName>
     <DefineConstants>INTERNALIZED_POWER_PACK;$(DefineConstants)</DefineConstants>
     <AllowCrossTargeting>true</AllowCrossTargeting>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <!-- These dummy entries are needed for F# Beta2 -->
@@ -39,22 +40,22 @@
       <Link>assemblyinfo.Common.fs</Link>
     </Compile>
     <Compile Include="assemblyinfo.fslex.exe.fs" />
-    <Compile Include="..\FSharp.PowerPack\Lexing.fsi">
+    <Compile Include="..\FSharp.PowerPack\lexing.fsi">
       <Link>lexing.fsi</Link>
     </Compile>
-    <Compile Include="..\FSharp.PowerPack\Lexing.fs">
+    <Compile Include="..\FSharp.PowerPack\lexing.fs">
       <Link>lexing.fs</Link>
     </Compile>
-    <Compile Include="..\FSharp.PowerPack\Parsing.fsi">
+    <Compile Include="..\FSharp.PowerPack\parsing.fsi">
       <Link>parsing.fsi</Link>
     </Compile>
-    <Compile Include="..\FSharp.PowerPack\Parsing.fs">
+    <Compile Include="..\FSharp.PowerPack\parsing.fs">
       <Link>parsing.fs</Link>
     </Compile>
-    <Compile Include="..\FSharp.PowerPack\Arg.fsi">
+    <Compile Include="..\FSharp.PowerPack\arg.fsi">
       <Link>arg.fsi</Link>
     </Compile>
-    <Compile Include="..\FSharp.PowerPack\Arg.fs">
+    <Compile Include="..\FSharp.PowerPack\arg.fs">
       <Link>arg.fs</Link>
     </Compile>
     <Compile Include="fslexast.fs" />
@@ -66,10 +67,11 @@
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="FSharp.Core" />
+    <Reference Include="System.Numerics" />
   </ItemGroup>
   <Import Project="$(FSharpPowerPackSourcesRoot)\FSharpPowerPackSource.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="!Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
-  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition="Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets" Condition="Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')" />
+  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition="(!Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')) And (Exists('$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets'))" />
+  <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="(!Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')) And (!Exists('$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets')) And (Exists('$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets'))" />
   <Import Project="$(FSharpPowerPackSourcesRoot)\..\lkg\FSharp.PowerPack-$(LkgVersion)\bin\FSharp.PowerPack.targets" />
 </Project>

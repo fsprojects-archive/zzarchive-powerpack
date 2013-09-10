@@ -1,4 +1,4 @@
-// (c) Microsoft Corporation. All rights reserved
+// (c) Microsoft Corporation. Apache 2.0 License
 //----------------------------------------------------------------------------
 // Some general F# utilities for mangling / unmangling / manipulating names.
 //--------------------------------------------------------------------------

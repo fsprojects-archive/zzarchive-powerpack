@@ -408,7 +408,7 @@ type public MatrixVectorTests() =
           mm
         
 
-        printf "minimum result = %O\n" (testCholesky b)
+        //printf "minimum result = %O\n" (testCholesky b)
         test "check very small" (testCholesky b < 0.000000001)
 
     [<Test>]
@@ -1211,25 +1211,25 @@ module Numeric =
 
     (* weightedGaussian: implements algorithm 8 *)
     let weightedGaussian unitIntegrate g (mu:Matrix<_>,sigma:Matrix<_>) (alpha:Matrix<_>,beta:Matrix<_>) =
-      printf "dim(sigma) = %d,%d\n" sigma.NumRows sigma.NumCols;
-      printf "dim(mu) = %d,%d\n" mu.NumRows mu.NumCols;
-      printf "dim(alpha) = %d,%d\n" alpha.NumRows alpha.NumCols;
-      printf "dim(beta) = %d,%d\n" beta.NumRows beta.NumCols;
+      //printf "dim(sigma) = %d,%d\n" sigma.NumRows sigma.NumCols;
+      //printf "dim(mu) = %d,%d\n" mu.NumRows mu.NumCols;
+      //printf "dim(alpha) = %d,%d\n" alpha.NumRows alpha.NumCols;
+      //printf "dim(beta) = %d,%d\n" beta.NumRows beta.NumCols;
       let l     = choleskyFactor sigma in
-      printf "dim(l) = %d,%d\n" l.NumRows l.NumCols;
+      //printf "dim(l) = %d,%d\n" l.NumRows l.NumCols;
       let l_inv = lowerTriangularInverse l in
-      printf "dim(l_inv) = %d,%d\n" l_inv.NumRows l_inv.NumCols;
+      //printf "dim(l_inv) = %d,%d\n" l_inv.NumRows l_inv.NumCols;
       (* apply mu subst and L_inv subst *)
       let alpha'  = l_inv * (alpha - mu) in
       let beta'   = l_inv * (beta  - mu) in
-      printf "dim(alpha') = %d,%d\n" alpha'.NumRows alpha'.NumCols;
-      printf "dim(beta') = %d,%d\n" beta'.NumRows beta'.NumCols;
+      //printf "dim(alpha') = %d,%d\n" alpha'.NumRows alpha'.NumCols;
+      //printf "dim(beta') = %d,%d\n" beta'.NumRows beta'.NumCols;
 
       (* apply phi_inv subst *)
       let alpha''     = Matrix.map phi alpha' in
       let beta''      = Matrix.map phi beta'  in
-      printf "dim(alpha'') = %d,%d\n" alpha''.NumRows alpha''.NumCols;
-      printf "dim(beta'') = %d,%d\n" beta''.NumRows beta''.NumCols;
+      //printf "dim(alpha'') = %d,%d\n" alpha''.NumRows alpha''.NumCols;
+      //printf "dim(beta'') = %d,%d\n" beta''.NumRows beta''.NumCols;
       let alphabeta'' = beta'' - alpha'' in
       (* reduced to unit integral *)
       let eval w =
@@ -1280,41 +1280,41 @@ module Numeric =
       let s  = Vector.create m 1.0 in
 
       (* pre-compute *)
-      let aT = a |> Array.map (fun ai ->    printf "dim(ai) = %d,%d\n" ai.NumRows ai.NumCols; ai.Transpose)  in
-      Printf.printf "sigmaHat=\n%O\n\n" sigmaHat;
+      let aT = a |> Array.map (fun ai ->    (* printf "dim(ai) = %d,%d\n" ai.NumRows ai.NumCols; *) ai.Transpose)  in
+      //Printf.printf "sigmaHat=\n%O\n\n" sigmaHat;
 
       for i = 1 to nIters do
        for j = 0 to m-1 do
-        Printf.printf "i=%d,j=%d,sigmaHat=\n%O\n\n" i j sigmaHat;
+        //Printf.printf "i=%d,j=%d,sigmaHat=\n%O\n\n" i j sigmaHat;
 
         (* Pre-computations for jth factor *)    
         let u_j      = sigmaHat * a.[j] in
-        Printf.printf "i=%d,j=%d,u_j=\n%O\n\n" i j u_j;
+        //Printf.printf "i=%d,j=%d,u_j=\n%O\n\n" i j u_j;
 
         let c_j      = aT.[j] * u_j   |> Matrix.toScalar in
-        Printf.printf "i=%d,j=%d,c_j=\n%O\n\n" i j c_j;
+        //Printf.printf "i=%d,j=%d,c_j=\n%O\n\n" i j c_j;
         let m_j      = aT.[j] * muHat |> Matrix.toScalar in
-        Printf.printf "i=%d,j=%d,m_j=\n%O\n\n" i j m_j;
+        //Printf.printf "i=%d,j=%d,m_j=\n%O\n\n" i j m_j;
         let d_j      = pi.[j] * c_j in
-        Printf.printf "i=%d,j=%d,d_j=\n%O\n\n" i j d_j;
+        //Printf.printf "i=%d,j=%d,d_j=\n%O\n\n" i j d_j;
         let phi_j    = m_j + d_j / (1.0 - d_j) * (m_j - mu.[j]) in
-        Printf.printf "i=%d,j=%d,phi_j=\n%O\n\n" i j phi_j;
+        //Printf.printf "i=%d,j=%d,phi_j=\n%O\n\n" i j phi_j;
         let psi_j    = c_j / (1.0 - d_j) in
-        Printf.printf "i=%d,j=%d,psi_j=\n%O\n\n" i j psi_j;
+        //Printf.printf "i=%d,j=%d,psi_j=\n%O\n\n" i j psi_j;
         let alpha_j  = alpha.[j] phi_j psi_j in
-        Printf.printf "i=%d,j=%d,alpha_j=\n%O\n\n" i j alpha_j;
+        //Printf.printf "i=%d,j=%d,alpha_j=\n%O\n\n" i j alpha_j;
         let beta_j   = beta.[j]  phi_j psi_j in
-        Printf.printf "i=%d,j=%d,beta_j=\n%O\n\n" i j beta_j;
+        //Printf.printf "i=%d,j=%d,beta_j=\n%O\n\n" i j beta_j;
        (* ADF update *)
         muHat    <- (let factor = (pi.[j] * (m_j - mu.[j]) + alpha_j)  /  (1.0 - d_j) in muHat + (factor * u_j))
-        Printf.printf "i=%d,j=%d,muHat=\n%O\n\n" i j muHat;
+        //Printf.printf "i=%d,j=%d,muHat=\n%O\n\n" i j muHat;
         sigmaHat <- (let factor = (pi.[j] * (1.0 - d_j) - beta_j)  /  (1.0 - d_j) ** 2.0 in sigmaHat + (factor * (u_j * u_j.Transpose)));
-        Printf.printf "i=%d,j=%d,ie1=\n%O\n\n" i j ((1.0 - d_j) ** 2.0);
-        Printf.printf "i=%d,j=%d,ie2=\n%O\n\n" i j u_j.Transpose;
-        Printf.printf "i=%d,j=%d,ie3=\n%O\n\n" i j ((pi.[j] * (1.0 - d_j) - beta_j));
-        Printf.printf "i=%d,j=%d,ie4=\n%O\n\n" i j ((pi.[j] * (1.0 - d_j) - beta_j)  /  (1.0 - d_j) ** 2.0);
-        Printf.printf "i=%d,j=%d,ie5=\n%O\n\n" i j (let factor = (pi.[j] * (1.0 - d_j) - beta_j)  /  (1.0 - d_j) ** 2.0 in factor * (u_j * u_j.Transpose));
-        Printf.printf "i=%d,j=%d,sigmaHat=\n%O\n\n" i j sigmaHat;
+        //Printf.printf "i=%d,j=%d,ie1=\n%O\n\n" i j ((1.0 - d_j) ** 2.0);
+        //Printf.printf "i=%d,j=%d,ie2=\n%O\n\n" i j u_j.Transpose;
+        //Printf.printf "i=%d,j=%d,ie3=\n%O\n\n" i j ((pi.[j] * (1.0 - d_j) - beta_j));
+        //Printf.printf "i=%d,j=%d,ie4=\n%O\n\n" i j ((pi.[j] * (1.0 - d_j) - beta_j)  /  (1.0 - d_j) ** 2.0);
+        //Printf.printf "i=%d,j=%d,ie5=\n%O\n\n" i j (let factor = (pi.[j] * (1.0 - d_j) - beta_j)  /  (1.0 - d_j) ** 2.0 in factor * (u_j * u_j.Transpose));
+        //Printf.printf "i=%d,j=%d,sigmaHat=\n%O\n\n" i j sigmaHat;
         (* Factor update *)
         pi.[j] <- 1.0 / (inv beta_j - psi_j);
         mu.[j] <- alpha_j / beta_j + phi_j;
@@ -1473,11 +1473,6 @@ module Numeric =
     let nItersA = 8
     let muHatA,sigmaHatA,zHatA = expectationPropagation (muA,sigmaA) mA (aA,zA,alphaA,betaA) nItersA
 
-    let dumpM str m = Printf.printf "%s:\n%O\n\n" str m
-    let dumpR str x = Printf.printf "%s = %f\n\n" str x
-    let _ = dumpM "muHat"    muHatA
-    let _ = dumpM "sigmaHat" sigmaHatA
-    let _ = dumpR "zHat"     zHatA
 
 
     (*----------------------------------------------------------------------------
@@ -1553,17 +1548,8 @@ module Numeric =
 
     let muHat ,sigmaHat ,zHat  = expectationPropagation (mu,sigma) m (a,z,alphas,betas) nIters
 
-    let _ = dumpM "muHat"    muHat 
-    let _ = dumpM "sigmaHat" sigmaHat   
-    let _ = dumpR "zHat"     zHat  
-
-
 
     let muHatC,sigmaHatC,zHatC = expectationPropagationMatLab (mu,sigma) m (l,u) nIters
-
-    let _ = dumpM "muHatC"    muHatC 
-    let _ = dumpM "sigmaHatC" sigmaHatC   
-    let _ = dumpR "zHatC"     zHatC  
 
     (*----------------------------------------------------------------------------
     !* misc tests

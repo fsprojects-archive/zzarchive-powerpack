@@ -518,6 +518,8 @@ val flush: channel:out_channel -> unit
 //Printing data to stdout/stderr
 
 
+#if FX_NO_STDIN
+#else
 /// Print a character to the stderr stream
 [<CompilerMessage("This construct is for ML compatibility. Consider using 'System.Console.Error.Write(char)' instead. This message can be disabled using '--nowarn:62' or '#nowarn \"62\"'.", 62, IsHidden=true)>]
 val prerr_char: char -> unit
@@ -554,11 +556,14 @@ val print_newline: unit -> unit
 
 [<CompilerMessage("This construct is for ML compatibility. Consider using 'System.Console.Write(string)' instead. This message can be disabled using '--nowarn:62' or '#nowarn \"62\"'.", 62, IsHidden=true)>]
 val print_string: string -> unit
+#endif
 
 //--------------------------------------------------------------------------
 //Reading data from the console.
 
 
+#if FX_NO_STDIN
+#else
 ///Read a floating point number from the console.
 [<CompilerMessage("This construct is for ML compatibility. Consider using 'System.Console.ReadLine() |> float' instead. This message can be disabled using '--nowarn:62' or '#nowarn \"62\"'.", 62, IsHidden=true)>]
 val read_float: unit -> float
@@ -570,6 +575,7 @@ val read_int: unit -> int
 ///Read a line from the console, without the end-of-line character.
 [<CompilerMessage("This construct is for ML compatibility. Consider using 'System.Console.ReadLine()' instead. This message can be disabled using '--nowarn:62' or '#nowarn \"62\"'.", 62, IsHidden=true)>]
 val read_line: unit -> string
+#endif
 
 
 [<CompilerMessage("This construct is for ML compatibility. Consider using Microsoft.FSharp.Core.Format<_,_,_,_> instead. This message can be disabled using '--nowarn:62' or '#nowarn \"62\"'.", 62, IsHidden=true)>]

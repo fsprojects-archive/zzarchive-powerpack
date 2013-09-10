@@ -42,9 +42,12 @@ val remove: string -> unit
 [<CompilerMessage("This construct is for ML compatibility. Consider using System.IO.File.Move directly. This message can be disabled using '--nowarn:62' or '#nowarn \"62\"'.", 62, IsHidden=true)>]
 val rename: string -> string -> unit
 
+#if FX_NO_SET_CURRENT_DIRECTORY
+#else
 /// Sets the current working directory for the process using <c>System.IO.Directory.SetCurrentDirectory</c> 
 [<CompilerMessage("This construct is for ML compatibility. Consider using System.IO.Directory.SetCurrentDirectory directly. This message can be disabled using '--nowarn:62' or '#nowarn \"62\"'.", 62, IsHidden=true)>]
 val chdir: string -> unit
+#endif
 
 /// Returns the current working directory for the process using <c>System.IO.Directory.GetCurrentDirectory</c>
 [<CompilerMessage("This construct is for ML compatibility. Consider using System.IO.Directory.GetCurrentDirectory directly. This message can be disabled using '--nowarn:62' or '#nowarn \"62\"'.", 62, IsHidden=true)>]

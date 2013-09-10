@@ -52,6 +52,6 @@ val set_parse_state: IParseState -> unit
 
 /// You can initialize error recovery by raising the Parse_error exception. 
 
-exception Parse_error = Microsoft.FSharp.Text.Parsing.RecoverableParseError
+exception Parse_error = Microsoft.FSharp.Text.Parsing.RecoverableParseErrorException
 
 

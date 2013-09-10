@@ -1,4 +1,5 @@
 namespace Microsoft.FSharp
-[<assembly:System.Reflection.AssemblyVersion("2.0.0.1")>]
-[<assembly:System.Reflection.AssemblyFileVersion("2.0.0.1")>]
+[<assembly:System.Reflection.AssemblyVersion("4.0.0.1")>]
+[<assembly:System.Reflection.AssemblyFileVersion("4.0.0.1")>]
+[<assembly:System.Reflection.AssemblyKeyFileAttribute(__SOURCE_DIRECTORY__ + @"\fs.snk")>] 
 do()

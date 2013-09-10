@@ -49,14 +49,14 @@ type public ``Byte``() =
         test  "vwknjewv0" (int (byte i) = i);
       for i = 0 to 255 do 
         test  "vwknjewv0" (byte i = byte i);
-      stdout.WriteLine "mul i 1";
+      //stdout.WriteLine "mul i 1";
       for i = 0 to 255 do 
         test  "vwknjewv0"  (Byte.mul (byte i) (byte 1) = byte i);
-      stdout.WriteLine "add";
+      //stdout.WriteLine "add";
       for i = 0 to 255 do 
         for j = 0 to 255 do 
           test  "vwknjewv0"  (int (Byte.add (byte i) (byte j)) = ((i + j) % 256));
-      stdout.WriteLine "mul i 1";
+      //stdout.WriteLine "mul i 1";
       for i = 0 to 49032 do 
         test  "vwknjewv0"  (int (byte i) = (i % 256));
       for i = 0 to 255 do 
@@ -70,32 +70,32 @@ type public ``Byte``() =
       for i = 1 to 255 do 
         for j = 1 to 255 do 
           test  "vwknjewv0"  (int (Byte.logand (byte i) (byte j)) = (&&&) i j);
-      stdout.WriteLine "logor";
+      //stdout.WriteLine "logor";
       for i = 1 to 255 do 
         for j = 1 to 255 do 
           test  "vwknjewv0"  (int (Byte.logor (byte i) (byte j)) = (|||) i j);
-      stdout.WriteLine "logxor";
+      //stdout.WriteLine "logxor";
       for i = 1 to 255 do 
         for j = 1 to 255 do 
           test  "vwknjewv0"  (int (Byte.logxor (byte i) (byte j)) = (^^^) i j);
-      stdout.WriteLine "lognot";
+      //stdout.WriteLine "lognot";
       for i = 1 to 255 do 
           test  "vwknjewv0"  (Byte.lognot (byte i) = byte (~~~ i))
-      stdout.WriteLine "shift_left";
+      //stdout.WriteLine "shift_left";
       for i = 0 to 255 do 
         for j = 0 to 7 do 
           test  "vwknjewv0"  (Byte.shift_left (byte i) j = byte ( i <<< j))
-      stdout.WriteLine "shift_right";
+      //stdout.WriteLine "shift_right";
       for i = 0 to 255 do 
         for j = 0 to 7 do 
           test  "vwknjewv0"  (Byte.shift_right (byte i) j = byte (i >>> j))
-      stdout.WriteLine "to_string";
+      //stdout.WriteLine "to_string";
       for i = 0 to 255 do 
           test  "vwknjewv0"  (Byte.to_string (byte i) = sprintf "%d" i)
-      stdout.WriteLine "of_string";
+      //stdout.WriteLine "of_string";
       for i = 0 to 255 do 
           test  "vwknjewv0"  (Byte.of_string (string i) = byte i)
-      stdout.WriteLine "done";
+      //stdout.WriteLine "done";
       ()    
 
 
@@ -115,42 +115,42 @@ type public Int32Tests() =
       for i = 0 to 255 do 
         test "test7" (Int32.of_int i = Int32.of_int i);
       done;
-      stdout.WriteLine "mul i 1";
+      //stdout.WriteLine "mul i 1";
       for i = 0 to 255 do 
         test "test8" (Int32.mul (Int32.of_int i) (Int32.of_int 1) = Int32.of_int i);
       done;
-      stdout.WriteLine "add";
+      //stdout.WriteLine "add";
       for i = 0 to 255 do 
         for j = 0 to 255 do 
           test "test" (Int32.to_int (Int32.add (Int32.of_int i) (Int32.of_int j)) = (i + j));
         done;
       done;
-      stdout.WriteLine "constants: min_int"; stdout.Flush();
+      //stdout.WriteLine "constants: min_int"; stdout.Flush();
       test "testq" (Int32.min_int = -2147483648);
       test "testw" (Int32.min_int = -2147483647 - 1);
 
-      stdout.WriteLine "constants: max_int";stdout.Flush();
+      //stdout.WriteLine "constants: max_int";stdout.Flush();
       test "teste" (Int32.max_int = 2147483647);
       test "testr" (Int32.max_int = 2147483646 + 1);
 
-      stdout.WriteLine "constants: string max_int";stdout.Flush();
+      //stdout.WriteLine "constants: string max_int";stdout.Flush();
       test "testt" (string Int32.max_int = "2147483647");
       test "testy" (string Int32.min_int = "-2147483648");
       test "testu" (Int32.to_string Int32.max_int = "2147483647");
       test "testi" (Int32.to_string Int32.min_int = "-2147483648");
 
-      stdout.WriteLine "constants: max_int - 10";stdout.Flush();
+      //stdout.WriteLine "constants: max_int - 10";stdout.Flush();
       test "testa" (Int32.max_int - 10 = 2147483637);
 
-      stdout.WriteLine "min int";stdout.Flush();
+      //stdout.WriteLine "min int";stdout.Flush();
       for i = Int32.min_int to Int32.min_int + 10 do 
         test "testb" (Int32.to_int (Int32.of_int i) = i);
       done;
-      stdout.WriteLine "max int";stdout.Flush();
+      //stdout.WriteLine "max int";stdout.Flush();
       for i = Int32.max_int - 10 to Int32.max_int - 1 do 
         test "testc" (Int32.to_int (Int32.of_int i) = i);
       done;
-      stdout.WriteLine "div";
+      //stdout.WriteLine "div";
       for i = 0 to 255 do 
         test "testd" (Int32.div (Int32.of_int i) (Int32.of_int 1) = Int32.of_int i);
       done;
@@ -168,29 +168,29 @@ type public Int32Tests() =
           test "testh" (Int32.to_int (Int32.logand (Int32.of_int i) (Int32.of_int j)) = (i &&& j));
         done;
       done;
-      stdout.WriteLine "logor";
+      //stdout.WriteLine "logor";
       for i = 1 to 255 do 
         for j = 1 to 255 do 
           test "testj" (Int32.to_int (Int32.logor (Int32.of_int i) (Int32.of_int j)) = (i ||| j));
         done;
       done;
-      stdout.WriteLine "logxor";
+      //stdout.WriteLine "logxor";
       for i = 1 to 255 do 
         for j = 1 to 255 do 
           test "testkkh" (Int32.to_int (Int32.logxor (Int32.of_int i) (Int32.of_int j)) = (i ^^^ j));
         done;
       done;
-      stdout.WriteLine "lognot";
+      //stdout.WriteLine "lognot";
       for i = 1 to 255 do 
           test "testqf" (Int32.lognot (Int32.of_int i) = Int32.of_int (~~~i))
       done;
-      stdout.WriteLine "shift_left";
+      //stdout.WriteLine "shift_left";
       for i = 0 to 255 do 
         for j = 0 to 7 do 
           test "testcr4" (Int32.shift_left (Int32.of_int i) j = Int32.of_int (i <<< j))
         done;
       done;
-      stdout.WriteLine "shift_right";
+      //stdout.WriteLine "shift_right";
       for i = 0 to 255 do 
         for j = 0 to 7 do 
           test "testvt3q" (Int32.shift_right (Int32.of_int i) j = Int32.of_int (i >>> j))
@@ -198,36 +198,36 @@ type public Int32Tests() =
       done;
       test "testqvt4" (Int32.shift_right 2 1 = 1);
       test "testvq3t" (Int32.shift_right 4 2 = 1);
-      stdout.WriteLine "shift_right_logical";
+      //stdout.WriteLine "shift_right_logical";
       for i = 0 to 255 do 
         for j = 0 to 7 do 
           test "testvq34" (Int32.shift_right_logical (Int32.of_int i) j = Int32.of_int (Pervasives.(lsr) i j))
         done;
       done;
       test "testvq3t" (Int32.shift_right_logical 0xFFFFFFFF 1 = 0x7FFFFFFF);
-      stdout.WriteLine "shift_right_logical (1)";
+      //stdout.WriteLine "shift_right_logical (1)";
       test "testvq3" (Int32.shift_right_logical 0xFFFFFFF2 1 = 0x7FFFFFF9);
-      stdout.WriteLine "shift_right_logical (2)";
+      //stdout.WriteLine "shift_right_logical (2)";
       test "testqvt4" (Int32.shift_right_logical 0x7FFFFFF2 1 = 0x3FFFFFF9);
-      stdout.WriteLine "shift_right_logical (3) ";
+      //stdout.WriteLine "shift_right_logical (3) ";
       test "testqv3t" (Int32.shift_right_logical 0xFFFFFFFF 2 = 0x3FFFFFFF);
-      stdout.WriteLine "shift_right_logical (4)";
+      //stdout.WriteLine "shift_right_logical (4)";
       test "testb4y5" (Int32.shift_right_logical 0x80000004 2 = 0x20000001);
-      stdout.WriteLine "to_string";
+      //stdout.WriteLine "to_string";
       for i = 0 to 255 do 
           test "testbsyet" (Int32.to_string (Int32.of_int i) = string i)
       done;
-      stdout.WriteLine "of_string";
+      //stdout.WriteLine "of_string";
       for i = 0 to 255 do 
           test "testvq4" (Int32.of_string (string i) = Int32.of_int i)
       done;
-      stdout.WriteLine "constants (hex)";
+      //stdout.WriteLine "constants (hex)";
       test "testv4w" (Int32.of_string "0x0" = 0);
       test "testv35" (Int32.of_string "0x1" = 1);
       test "testvq3" (Int32.of_string "0x2" = 2);
       test "testv3qt" (Int32.of_string "0xa" = 10);
       test "testbwy4" (Int32.of_string "0xff" = 255);
-      stdout.WriteLine "constants (octal)";
+      //stdout.WriteLine "constants (octal)";
       test "testb4y5" (Int32.of_string "0o0" = 0);
       test "testb4y" (Int32.of_string "0o1" = 1);
       test "testby4" (Int32.of_string "0o2" = 2);
@@ -235,7 +235,7 @@ type public Int32Tests() =
       test "testb45" (Int32.of_string "0o10" = 8);
       test "testbw4" (Int32.of_string "0o777" = 7*64 + 7*8 + 7);
       test "test67n" (Int32.of_string "0o111" = 64 + 8 + 1);
-      stdout.WriteLine "constants (binary)";
+      //stdout.WriteLine "constants (binary)";
       test "test34q" (Int32.of_string "0b0" = 0);
       test "testn" (Int32.of_string "0b1" = 1);
       test "tester" (Int32.of_string "0b10" = 2);
@@ -252,13 +252,13 @@ type public UInt32Tests() =
   
     [<Test>]
     member this.BasicTests() = 
-      stdout.WriteLine "constants (hex, unit32)";
+      //stdout.WriteLine "constants (hex, unit32)";
       test "testv4w" (UInt32.of_string "0x0" = 0u);
       test "testv35" (UInt32.of_string "0x1" = 1u);
       test "testvq3" (UInt32.of_string "0x2" = 2u);
       test "testv3qt" (UInt32.of_string "0xa" = 10u);
       test "testbwy4" (UInt32.of_string "0xff" = 255u);
-      stdout.WriteLine "constants (octal, unit32)";
+      //stdout.WriteLine "constants (octal, unit32)";
       test "testb4y5" (UInt32.of_string "0o0" = 0u);
       test "testb4y" (UInt32.of_string "0o1" = 1u);
       test "testby4" (UInt32.of_string "0o2" = 2u);
@@ -266,7 +266,7 @@ type public UInt32Tests() =
       test "testb45" (UInt32.of_string "0o10" = 8u);
       test "testbw4" (UInt32.of_string "0o777" = 7u*64u + 7u*8u + 7u);
       test "test67n" (UInt32.of_string "0o111" = 64u + 8u + 1u);
-      stdout.WriteLine "constants (binary, unit32)";
+      //stdout.WriteLine "constants (binary, unit32)";
 
       test "test34q" (UInt32.of_string "0b0" = 0u);
       test "testn" (UInt32.of_string "0b1" = 1u);
@@ -280,11 +280,11 @@ type public UInt32Tests() =
       test "testnaey" (UInt32.of_string "0b11111111111111111111111111111111" = 0xFFFFFFFFu);
       test "testny" (UInt32.of_string "0xffffffff" = UInt32.max_int);
 
-      stdout.WriteLine "constants (decimal)";
+      //stdout.WriteLine "constants (decimal)";
       test "test" (Int32.of_string "2147483647" = Int32.max_int);
       test "test" (Int32.of_string "-0x80000000" = Int32.min_int);
       test "test" (Int32.of_string "-2147483648" = Int32.min_int);
-      stdout.WriteLine "done";
+      //stdout.WriteLine "done";
       ()    
 
 [<TestFixture>]
@@ -303,17 +303,17 @@ type public Int64Tests() =
           for i = 0 to 255 do 
             test  "vwknw4vkl"  (Int64.of_int i = Int64.of_int i);
           done;
-          stdout.WriteLine "mul i 1";
+          //stdout.WriteLine "mul i 1";
           for i = 0 to 255 do 
             test  "vwknw4vkl"  (Int64.mul (Int64.of_int i) (Int64.of_int 1) = Int64.of_int i);
           done;
-          stdout.WriteLine "add";
+          //stdout.WriteLine "add";
           for i = 0 to 255 do 
             for j = 0 to 255 do 
               test  "vwknw4vkl"  (Int64.to_int (Int64.add (Int64.of_int i) (Int64.of_int j)) = (i + j));
             done;
           done;
-          stdout.WriteLine "div";
+          //stdout.WriteLine "div";
           for i = 0 to 255 do 
             test  "vwknw4vkl"  (Int64.div (Int64.of_int i) (Int64.of_int 1) = Int64.of_int i);
           done;
@@ -331,58 +331,58 @@ type public Int64Tests() =
               test  "vwknw4vkl"  (Int64.to_int (Int64.logand (Int64.of_int i) (Int64.of_int j)) = Pervasives.(land) i j);
             done;
           done;
-          stdout.WriteLine "logor";
+          //stdout.WriteLine "logor";
           for i = 1 to 255 do 
             for j = 1 to 255 do 
               test  "vwknw4vkl"  (Int64.to_int (Int64.logor (Int64.of_int i) (Int64.of_int j)) = Pervasives.(lor) i j);
             done;
           done;
-          stdout.WriteLine "logxor";
+          //stdout.WriteLine "logxor";
           for i = 1 to 255 do 
             for j = 1 to 255 do 
               test  "vwknw4vkl"  (Int64.to_int (Int64.logxor (Int64.of_int i) (Int64.of_int j)) = i ^^^ j);
             done;
           done;
-          stdout.WriteLine "lognot";
+          //stdout.WriteLine "lognot";
           for i = 1 to 255 do 
               test  "vwknw4vkl"  (Int64.lognot (Int64.of_int i) = Int64.of_int (~~~ i))
           done;
         #if NOTAILCALLS // NOTAILCALLS <-> MONO
         #else
-          stdout.WriteLine "shift_left";
+          //stdout.WriteLine "shift_left";
           for i = 0 to 255 do 
             for j = 0 to 7 do 
               test  "vwknw4vkl"  (Int64.shift_left (Int64.of_int i) j = Int64.of_int (i <<< j))
             done;
           done;
-          stdout.WriteLine "shift_right";
+          //stdout.WriteLine "shift_right";
           for i = 0 to 255 do 
             for j = 0 to 7 do 
               test  "vwknw4vkl"  (Int64.shift_right (Int64.of_int i) j = Int64.of_int (i >>> j))
             done;
           done;
-          stdout.WriteLine "shift_right_logical";
+          //stdout.WriteLine "shift_right_logical";
           for i = 0 to 255 do 
             for j = 0 to 7 do 
               test  "vwknw4vkl"  (Int64.shift_right_logical (Int64.of_int i) j = Int64.of_int (Pervasives.(lsr) i j))
             done;
           done;
         #endif
-          stdout.WriteLine "to_string";
+          //stdout.WriteLine "to_string";
           for i = 0 to 255 do 
               test  "vwknw4vkl"  (Int64.to_string (Int64.of_int i) = string i)
           done;
-          stdout.WriteLine "of_string";
+          //stdout.WriteLine "of_string";
           for i = 0 to 255 do 
               test  "vwknw4vkl"  (Int64.of_string (string i) = Int64.of_int i)
           done;
-          stdout.WriteLine "constants (hex)";
+          //stdout.WriteLine "constants (hex)";
           test  "vwknw4vkl"  (Int64.of_string "0x0" = 0L);
           test  "vwknw4vkl"  (Int64.of_string "0x1" = 1L);
           test  "vwknw4vkl"  (Int64.of_string "0x2" = 2L);
           test  "vwknw4vkl"  (Int64.of_string "0xa" = 10L);
           test  "vwknw4vkl"  (Int64.of_string "0xff" = 255L);
-          stdout.WriteLine "constants (octal)";
+          //stdout.WriteLine "constants (octal)";
           test  "vwknw4vkl"  (Int64.of_string "0o0" = 0L);
           test  "vwknw4vkl"  (Int64.of_string "0o1" = 1L);
           test  "vwknw4vkl"  (Int64.of_string "0o2" = 2L);
@@ -390,7 +390,7 @@ type public Int64Tests() =
           test  "vwknw4vkl"  (Int64.of_string "0o10" = 8L);
           test  "vwknw4vkl"  (Int64.of_string "0o777" = 7L*64L + 7L*8L + 7L);
           test  "vwknw4vkl"  (Int64.of_string "0o111" = 64L + 8L + 1L);
-          stdout.WriteLine "constants (binary)";
+          //stdout.WriteLine "constants (binary)";
           test  "vwknw4vkl"  (Int64.of_string "0b0" = 0L);
           test  "vwknw4vkl"  (Int64.of_string "0b1" = 1L);
           test  "vwknw4vkl"  (Int64.of_string "0b10" = 2L);
@@ -403,13 +403,13 @@ type public Int64Tests() =
           test  "vwknw4vkl"  (Int64.of_string "0b1111111100000000111111110000000011111111000000001111111100000000" = 0xFF00FF00FF00FF00L);
           test  "vwknw4vkl"  (Int64.of_string "0b1111111111111111111111111111111111111111111111111111111111111111" = 0xFFFFFFFFFFFFFFFFL);
 
-          stdout.WriteLine "of_string: min_int";
+          //stdout.WriteLine "of_string: min_int";
           test  "vwknw4vkl"  (Int64.of_string "-0x8000000000000000" = Int64.min_int);
           test  "vwknw4vkl"  (Int64.of_string "-9223372036854775808" = Int64.min_int);
           test  "vwknw4vkl"  (-9223372036854775808L = Int64.min_int);
-          stdout.WriteLine "done";
+          //stdout.WriteLine "done";
 
-          stdout.WriteLine "constants (hex, UInt64)";
+          //stdout.WriteLine "constants (hex, UInt64)";
           test  "vwknw4vkl"  (UInt64.of_string "0x0" = 0UL);
           test  "vwknw4vkl"  (UInt64.of_string "0x1" = 1UL);
           test  "vwknw4vkl"  (UInt64.of_string "0x2" = 2UL);
@@ -417,7 +417,7 @@ type public Int64Tests() =
           test  "vwknw4vkl"  (UInt64.of_string "0xff" = 255UL);
           test  "vwknw4vkl"  (UInt64.of_string "0xffffffffffffffff" = UInt64.max_int);
           
-          stdout.WriteLine "constants (octal, UInt64)";
+          //stdout.WriteLine "constants (octal, UInt64)";
           test  "vwknw4vkl"  (UInt64.of_string "0o0" = 0UL);
           test  "vwknw4vkl"  (UInt64.of_string "0o1" = 1UL);
           test  "vwknw4vkl"  (UInt64.of_string "0o2" = 2UL);
@@ -426,7 +426,7 @@ type public Int64Tests() =
           test  "vwknw4vkl"  (UInt64.of_string "0o777" = 7UL*64UL + 7UL*8UL + 7UL);
           test  "vwknw4vkl"  (UInt64.of_string "0o111" = 64UL + 8UL + 1UL);
           
-          stdout.WriteLine "constants (binary, UInt64)";
+          //stdout.WriteLine "constants (binary, UInt64)";
           test  "vwknw4vkl"  (UInt64.of_string "0b0" = 0UL);
           test  "vwknw4vkl"  (UInt64.of_string "0b1" = 1UL);
           test  "vwknw4vkl"  (UInt64.of_string "0b10" = 2UL);
@@ -439,7 +439,7 @@ type public Int64Tests() =
           test  "vwknw4vkl"  (UInt64.of_string "0b1111111100000000111111110000000011111111000000001111111100000000" = 0xFF00FF00FF00FF00UL);
           test  "vwknw4vkl"  (UInt64.of_string "0b1111111111111111111111111111111111111111111111111111111111111111" = 0xFFFFFFFFFFFFFFFFUL);
 
-          stdout.WriteLine "done";
+          //stdout.WriteLine "done";
           ()    
 
 
@@ -740,6 +740,8 @@ type public SysTests() =
           test "w99ocwkm" (try ignore (Sys.getenv "VERY UNLIKELY VARIABLE"); false; with Not_found -> true)
 #endif
 
+#if FX_NO_SET_CURRENT_DIRECTORY
+#else
     [<Test>]
     member this.Test_Sys_getcwd() = 
             
@@ -750,6 +752,7 @@ type public SysTests() =
           Sys.chdir p1;
           let p3 = Sys.getcwd() in 
           test "eiojk" (p1 = p3)
+#endif
 
 #if FX_NO_PROCESS_START
 #else
@@ -788,5 +791,8 @@ type public FuncConvertTests() =
         check "dwe098ce3" ((Microsoft.FSharp.Core.FuncConvert.FuncFromTupled(fun (a,b,c,d) -> a + b + c + d)) 3 4 5 5) 17
         check "dwe098ce4" ((Microsoft.FSharp.Core.FuncConvert.FuncFromTupled(fun (a,b,c,d,e) -> a + b + c + d + e)) 3 4 5 5 5) 22
 
+#if FX_NO_CONVERTER
+#else
         check "dwe098ce1" ((Microsoft.FSharp.Core.FuncConvert.ToFSharpFunc(System.Converter(fun a -> a + 1))) 3) 4
+#endif
         check "dwe098ce1" ((Microsoft.FSharp.Core.FuncConvert.ToFSharpFunc(System.Action<_>(fun a -> ()))) 3) ()

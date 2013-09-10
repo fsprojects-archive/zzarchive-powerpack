@@ -72,13 +72,10 @@ type FsYacc() =
         with get ()  = toolPath
         and  set (s) = toolPath <- s
         
-#if FX_ATLEAST_35
-#else
     // Name of the .exe to call
-    member this.ToolExe
+    override this.ToolExe
         with get ()  = toolExe
         and  set (s) = toolExe <- s        
-#endif
 
     // ToolTask methods
     override this.ToolName = "fsyacc.exe"

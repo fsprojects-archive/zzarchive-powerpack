@@ -120,7 +120,7 @@ type public BigRationalTests() =
                 BigRational.Equals(refResult,result)
             match List.tryFind (fun result -> not (resOK result)) results with
             | None        -> () // ok
-            | Some result -> printf "Test failed. %s (%A,%A) (%A,%A). Expected %A. Observed %A\n" name p q pp qq refResult result
+            | Some result -> (* printf "Test failed. %s (%A,%A) (%A,%A). Expected %A. Observed %A\n" name p q pp qq refResult result *)
                              reportFailure "cejkew09"
 
         let test2All name f check vectors = List.iter (test2One name f check) vectors
@@ -218,7 +218,7 @@ type public BigRationalTests() =
             let args      = [for z in zs do for zz in zzs do yield (z,zz)]    
             match List.tryFind (fun (z,zz) -> resultRef <> f (z,zz)) args with
             | None        -> () // ok
-            | Some (z,zz) -> printf "Test failed. %s (%A,%A) (%A,%A) = %s %A %A. Expected %A.\n" name p q pp qq name z zz resultRef
+            | Some (z,zz) -> //printf "Test failed. %s (%A,%A) (%A,%A) = %s %A %A. Expected %A.\n" name p q pp qq name z zz resultRef
                              reportFailure "cknwe9"
 
         // Test: generic uop
@@ -228,7 +228,7 @@ type public BigRationalTests() =
             let resultRef = check (p,q) //: bool        
             match List.tryFind (fun z -> resultRef <> f z) zs with
             | None   -> () // ok
-            | Some z -> printf "Test failed. %s (%A,%A) = %s %A. Expected %A.\n" name p q name z resultRef
+            | Some z -> //printf "Test failed. %s (%A,%A) = %s %A. Expected %A.\n" name p q name z resultRef
                         reportFailure "vekjkrejvre0"
                              
         let testR2All name f check vectors = List.iter (testR2One name f check) vectors
@@ -268,7 +268,7 @@ type public BigRationalTests() =
                BigRational.Equals(refResult,result)
             match List.tryFind (fun result -> not (resOK result)) results with
             | None        -> () // ok
-            | Some result -> printf "Test failed. %s (%A,%A). Expected %A. Observed %A\n" name p q refResult result
+            | Some result -> //printf "Test failed. %s (%A,%A). Expected %A. Observed %A\n" name p q refResult result
                              reportFailure "klcwe09wek"
 
         let test1All name f check vectors = List.iter (test1One name f check) vectors
