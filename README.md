@@ -1,4 +1,3 @@
-
 This is the F# community repository for the old F# PowerPack library. 
 See http://fsharppowerpack.codeplex.com/ for instructions on use.
 
