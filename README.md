@@ -3,20 +3,25 @@ See http://fsharppowerpack.codeplex.com/ for instructions on use.
 
 The PowerPack functionality is moving.
 
- * [FsLex and FsYacc](http://fsprojects.github.io/FsLexYacc/)
+ * FsLex and FsYacc are moved to an [independent project](http://fsprojects.github.io/FsLexYacc/)
 
- * [F# documentation generation tools](http://tpetricek.github.io/FSharp.Formatting/)
+ * F# documentation generation is replaced by [FSharp.Formatting](http://tpetricek.github.io/FSharp.Formatting/)
 
- * [F# metadata reader](http://fsharp.github.io/FSharp.Compiler.Service/)
+ * F# metadata reader is replaced by [FSharp.Compiler.Service](http://fsharp.github.io/FSharp.Compiler.Service/)
 
+ * Parallel sequences are now an independent project [FSharp.Collections.ParallelSeq](https://github.com/fsgit/FSharp.Collections.ParallelSeq)
 
-These components are replicated in [FSharpx](https://github.com/fsprojects/fsharpx):
+ * These components are replicated in [FSharpx](https://github.com/fsprojects/fsharpx):
 
- * Quotations to Expression Tree Bridge
- * Async extensions to WebClient, WebRequest and File
- * Lazy module
- * ResizeArray module
- * LazyList
+   * Quotations to Expression Tree Bridge
+
+   * Async extensions to WebClient, WebRequest and File
+
+   * Lazy module
+
+   * ResizeArray module
+
+   * LazyList
 
 These components are replicated in the F# support in [Math.Net Numerics](http://numerics.mathdotnet.com/):
 
