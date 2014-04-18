@@ -10,7 +10,7 @@ The PowerPack functionality is moving.
  * [F# metadata reader](http://fsharp.github.io/FSharp.Compiler.Service/)
 
 
-These components are replicated in FSharpx:
+These components are replicated in [FSharpx](https://github.com/fsprojects/fsharpx):
 
  * Quotations to Expression Tree Bridge
  * Async extensions to WebClient, WebRequest and File
@@ -18,7 +18,7 @@ These components are replicated in FSharpx:
  * ResizeArray module
  * LazyList
 
-These components are replicated in Math.Net Numerics:
+These components are replicated in the F# support in [Math.Net Numerics](http://numerics.mathdotnet.com/):
 
  * Complex
  * BigRational
@@ -27,5 +27,5 @@ History
 -------
 
 This code is based on the F# PowerPack code drop under the OSS approved Apache 2.0 
-license from http://fsharppowerpack.codeplex.com/.
+license from the original [F# Power Pack site](http://fsharppowerpack.codeplex.com/).
 
