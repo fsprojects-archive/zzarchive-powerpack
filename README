@@ -1,12 +1,32 @@
-This is the F# PowerPack library, based on the F# PowerPack code drop under the OSS approved Apache 2.0 license from http://fsharppowerpack.codeplex.com/.
+
+This is the F# community repository for the old F# PowerPack library. 
+See http://fsharppowerpack.codeplex.com/ for instructions on use.
+
+The PowerPack functionality is moving.
+
+ * [FsLex and FsYacc](http://fsprojects.github.io/FsLexYacc/)
+
+ * [F# documentation generation tools](http://tpetricek.github.io/FSharp.Formatting/)
+
+ * [F# metadata reader](http://fsharp.github.io/FSharp.Compiler.Service/)
+
 
 These components are replicated in FSharpx:
-*Quotations to Expression Tree Bridge
-*Async extensions to WebClient, WebRequest and File
-*Lazy module
-*ResizeArray module
-*LazyList
+
+ * Quotations to Expression Tree Bridge
+ * Async extensions to WebClient, WebRequest and File
+ * Lazy module
+ * ResizeArray module
+ * LazyList
 
 These components are replicated in Math.Net Numerics:
-*Complex
-*BigRational
+
+ * Complex
+ * BigRational
+
+History
+-------
+
+This code is based on the F# PowerPack code drop under the OSS approved Apache 2.0 
+license from http://fsharppowerpack.codeplex.com/.
+
