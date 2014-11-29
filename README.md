@@ -38,3 +38,8 @@ History
 This code is based on the F# PowerPack code drop under the OSS approved Apache 2.0 
 license from the original [F# Power Pack site](http://fsharppowerpack.codeplex.com/).
 
+### Maintainer(s)
+
+- We are seeking a primary active maintainer for this stable repo. Please record your interest by [adding an admin issue](https://github.com/fsprojects/FsProjectsAdmin/issues)
+
+The default maintainer account for projects under "fsprojects" is [@fsgit](https://github.com/fsgit) - F# Community Project Incubation Space (repo management)
