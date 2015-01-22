@@ -1,3 +1,6 @@
+[![Issue Stats](http://issuestats.com/github/fsprojects/powerpack/badge/issue)](http://issuestats.com/github/fsprojects/powerpack)
+[![Issue Stats](http://issuestats.com/github/fsprojects/powerpack/badge/pr)](http://issuestats.com/github/fsprojects/powerpack)
+
 This is the F# community repository for the old F# PowerPack library. 
 See http://fsharppowerpack.codeplex.com/ for instructions on use.
 
