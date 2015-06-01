@@ -1,7 +1,5 @@
-[![Issue Stats](http://issuestats.com/github/fsprojects/powerpack/badge/issue)](http://issuestats.com/github/fsprojects/powerpack)
-[![Issue Stats](http://issuestats.com/github/fsprojects/powerpack/badge/pr)](http://issuestats.com/github/fsprojects/powerpack)
 
-This is the F# community repository for the old F# PowerPack library. 
+[ARCHIVED] This is the old F# community repository for the old F# PowerPack library. 
 See http://fsharppowerpack.codeplex.com/ for instructions on use.
 
 The PowerPack functionality is moving.
@@ -45,4 +43,4 @@ license from the original [F# Power Pack site](http://fsharppowerpack.codeplex.c
 
 - We are seeking a primary active maintainer for this stable repo. Please record your interest by [adding an admin issue](https://github.com/fsprojects/FsProjectsAdmin/issues)
 
-The default maintainer account for projects under "fsprojects" is [@fsgit](https://github.com/fsgit) - F# Community Project Incubation Space (repo management)
+The default maintainer account for projects under "fsprojects" is [@fsprojectsgit](https://github.com/fsprojectsgit) - F# Community Project Incubation Space (repo management)
