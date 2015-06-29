@@ -270,7 +270,7 @@ type public ZZZ_ControlTests() =
         let rec work = async {
             for i in 1 .. 49 do
                 do worker.ReportProgress i
-                do printfn "report %d" i
+                //do printfn "report %d" i
                 do System.Threading.Thread.Sleep 1
           }
         and worker: AsyncWorker<_> = AsyncWorker(work)
@@ -432,8 +432,6 @@ type public ZZZ_ControlTests() =
                         let! (_, reply) = processor.Receive()
                         reply.RegisterResult (AsyncOk None)
                         return! fadingLoop (total - 1)
-                    else
-                        printfn "Done"
                 }
             let rec mainLoop curr = 
                 async   {
@@ -493,8 +491,6 @@ type public ZZZ_ControlTests() =
                         let! (_, reply) = processor.Receive()
                         reply.RegisterResult (AsyncOk None)
                         return! fadingLoop (total - 1)
-                    else
-                        printfn "Done"
                 }
             let rec mainLoop curr = 
                 async   {

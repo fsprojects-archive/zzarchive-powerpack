@@ -119,8 +119,12 @@ type internal Stack<'a>(n)  =
         for i = 0 to (count - 1) do 
             System.Console.Write("{0}{1}",(contents.[i]),if i=count-1 then ":" else "-") 
           
-exception RecoverableParseError
-exception Accept of obj
+type RecoverableParseErrorException() = 
+     inherit Exception()
+
+type Accept(data:obj) = 
+     inherit Exception()
+     member x.Data = data
 
 #if DEBUG
 module Flags = 
@@ -258,7 +262,7 @@ module Implementation =
                 member p.GetInput(n)    = ruleValues.[n-1];        
                 member p.ResultRange    = (lhsPos.[0], lhsPos.[1]);  
                 member p.ParserLocalStore = (localStore :> IDictionary<_,_>); 
-                member p.RaiseError()  = raise RecoverableParseError  (* NOTE: this binding tests the fairly complex logic associated with an object expression implementing a generic abstract method *)
+                member p.RaiseError()  = raise (RecoverableParseErrorException())  (* NOTE: this binding tests the fairly complex logic associated with an object expression implementing a generic abstract method *)
             }       
 
 #if DEBUG
@@ -379,9 +383,6 @@ module Implementation =
 #if DEBUG
                     if Flags.debug then Console.Write("reduce popping {0} values/states, lookahead {1}", n, report haveLookahead lookaheadToken);
 #endif
-                    
-                    lhsPos.[0] <- Position.Empty;                                                                     
-                    lhsPos.[1] <- Position.Empty;  
                     for i = 0 to n - 1 do                                                                             
                         if valueStack.IsEmpty then failwith "empty symbol stack";
                         let topVal = valueStack.Peep()
@@ -390,10 +391,17 @@ module Implementation =
                         ruleValues.[(n-i)-1] <- topVal.value;  
                         ruleStartPoss.[(n-i)-1] <- topVal.startPos;  
                         ruleEndPoss.[(n-i)-1] <- topVal.endPos;  
-                        if lhsPos.[1] = Position.Empty then lhsPos.[1] <- topVal.endPos;
-                        if not (topVal.startPos = Position.Empty) then lhsPos.[0] <- topVal.startPos
-                    done;                                                                                           
-                    
+                        if i = 0 then lhsPos.[1] <- topVal.endPos;                                     
+                        if i = n - 1 then lhsPos.[0] <- topVal.startPos
+                    done;                                                                                             
+                    // Use the lookahead token to populate the locations if the rhs is empty                        
+                    if n = 0 then 
+                        if haveLookahead then 
+                           lhsPos.[0] <- lookaheadStartPos;                                                                     
+                           lhsPos.[1] <- lookaheadEndPos;                                                                       
+                        else 
+                           lhsPos.[0] <- lexbuf.StartPos;
+                           lhsPos.[1] <- lexbuf.EndPos;
                     try                                                                                               
                           // Printf.printf "reduce %d\n" prod;                                                       
                         let redResult = reduction parseState                                                          
@@ -405,10 +413,10 @@ module Implementation =
                         if Flags.debug then Console.WriteLine(" goto state {0}", newGotoState)
 #endif
                     with                                                                                              
-                    | Accept res ->                                                                            
+                    | :? Accept as res ->                                                                            
                           finished <- true;                                                                             
-                          valueStack.Push(ValueInfo(res, lhsPos.[0], lhsPos.[1])) 
-                    | RecoverableParseError ->
+                          valueStack.Push(ValueInfo(res.Data, lhsPos.[0], lhsPos.[1])) 
+                    | :? RecoverableParseErrorException  ->
 #if DEBUG
                           if Flags.debug then Console.WriteLine("RecoverableParseErrorException...\n");
 #endif

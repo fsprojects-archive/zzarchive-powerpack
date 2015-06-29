@@ -34,24 +34,6 @@ module List =
 
 let sourcePath = "."  // no trailing / 
 
-let gac20s =
-  [ "bin\gac\FSharp.Compiler.CodeDom.dll",[];
-    "bin\gac\FSharp.PowerPack.dll",[];
-    "bin\gac\FSharp.PowerPack.Compatibility.dll",[];
-    "bin\gac\FSharp.PowerPack.Linq.dll",[];
-    "bin\gac\FSharp.PowerPack.Metadata.dll",[];
-// Include these if we ever ship policy DLLs again
-//    "bin/gac/policy.1.9.FSharp.PowerPack.dll",            ["bin/gac/policy.1.9.FSharp.PowerPack.dll.config"];
-//    "bin/gac/policy.1.9.FSharp.PowerPack.Linq.dll",       ["bin/gac/policy.1.9.FSharp.PowerPack.Linq.dll.config"];
-    ]
-
-let shortcuts = 
-  [ // "README-fsharp.html"  , "F# Release Notes" ;
-    // "bin/fsi.exe", "F# Interactive (Console)";
-    // "doc/README-vfsi.html", "F# Interactive (Visual Studio)";
-    // "doc/README-samples.html", "F# Samples";
-  ]
-
 //----------------------------------------------------------------------------
 // md5
 //----------------------------------------------------------------------------
@@ -199,25 +181,11 @@ let writeDirectoryFileComponent fp indent dirID dpath file =
       let compId = fileCompID file 
       let guid   = guidOfID compId 
       let fid = fileID file 
-      if List.memAssoc file gac20s then 
-          [],[],[writeGACComponent gac20s fp indent file ]
-      elif (gac20s |> List.exists (fun (man,auxs) -> List.mem file auxs)) then 
-          [],[],[] // written by writeGACComponent 
-      else 
-          let isShortcut = List.memAssoc file shortcuts
-          fprintfn fp "%s<Component Id='%s' Guid='%s' DiskId='1' >" (spaces indent) compId guid;
-          fprintfn fp "%s<File Id='%s' Name='%s' Source='%s/%s'>" (spaces (indent+2)) fid (fileName file) sourcePath file;
-          if isShortcut then 
-            fprintfn fp "%s<Shortcut Id='Shortcut.%s'  Directory='FSharpMenu' Name='%s'  Description='Shortcut to %s' Advertise='no' />" (spaces (indent+4)) fid (List.assoc file shortcuts) file;
-          fprintfn fp "%s</File>" (spaces (indent+2));
-          if isShortcut then 
-            fprintfn fp "%s<RegistryValue Root='HKCU' Key='Software\\Microsoft Research\\FSharp\\ILX-VERSION\\%s' Type='string' Value='1' KeyPath='yes' />" (spaces (indent+2)) (keyPathName file);
-          if (fileName file) = "FSharp.ProjectSystem.FSharp.dll" then 
-            fprintf fp @"
-              <CreateFolder/>
-              "
-          fprintfn fp "%s</Component>" (spaces indent);
-          [compId],[],[]
+      fprintfn fp "%s<Component Id='%s' Guid='%s' DiskId='1' >" (spaces indent) compId guid;
+      fprintfn fp "%s<File Id='%s' Name='%s' Source='%s/%s'>" (spaces (indent+2)) fid (fileName file) sourcePath file;
+      fprintfn fp "%s</File>" (spaces (indent+2));
+      fprintfn fp "%s</Component>" (spaces indent);
+      [compId],[],[]
     else
       [],[],[]
 
@@ -252,12 +220,6 @@ let _ =
 
 // Sanity check called-out files are present
 let fileSet     = Set.ofList files
-let gac20Set    = Set.ofList (List.map fst gac20s)
-let shortcutSet = Set.ofList (List.map fst shortcuts)
-let checkEmpty descr a = if not (Set.isEmpty a) then
-                            failwith ("Checking " + descr + " files. Could not find: " + String.concat " and " (Set.toList a))
-checkEmpty "gac20"    (gac20Set    - fileSet)
-checkEmpty "shortcut" (shortcutSet - fileSet)
 
 // Write files.wxs...
 let fp = System.IO.File.CreateText "files.wxs"
@@ -285,30 +247,3 @@ fprintf fp @"
 
 fp.Close()
 exit 0
-(*
-            <ProgId Id='VisualStudio.fs.9.0' Description='Visual F# Source file' Icon='IDbin.FSharp.ProjectSystem.FSharp.dll' IconIndex='0' >
-              <Extension Id='fs' ContentType='application/fsharp-source' >
-                <Verb Id ='open' Command='Open' TargetProperty='VS90DEVENV' Argument='""%%1""' />
-              </Extension>
-            </ProgId>
-            <ProgId Id='VisualStudio.fsi.9.0' Description='Visual F# Signature file' Icon='IDbin.FSharp.ProjectSystem.FSharp.dll' IconIndex='1' >           
-              <Extension Id='fsi' ContentType='application/fsharp-signature' >
-                <Verb Id ='open' Command='Open' TargetProperty='VS90DEVENV' Argument='""%%1""' />
-              </Extension>
-            </ProgId>
-            <ProgId Id='VisualStudio.fsx.9.0' Description='Visual F# Script file' Icon='IDbin.FSharp.ProjectSystem.FSharp.dll' IconIndex='2' >
-              <Extension Id='fsx' ContentType='application/fsharp-script' >
-                <Verb Id ='open'       Command='Open'                    TargetProperty='VS90DEVENV' Argument='""%%1""' />
-              </Extension>
-            </ProgId>
-            <ProgId Id='VisualStudio.fsscript.9.0' Description='Visual F# Script file' Icon='IDbin.FSharp.ProjectSystem.FSharp.dll' IconIndex='2' >
-              <Extension Id='fsscript' ContentType='application/fsharp-script' >
-                <Verb Id ='open'       Command='Open'                    TargetProperty='VS90DEVENV' Argument='""%%1""' />
-              </Extension>
-            </ProgId>
-            <ProgId Id='VisualStudio.fsproj.9.0' Description='Visual F# Project file' Icon='IDbin.FSharp.ProjectSystem.FSharp.dll' IconIndex='3' >
-              <Extension Id='fsproj' ContentType='application/fsharp-project' >
-                <Verb Id ='open'       Command='Open'                    TargetProperty='VS90DEVENV' Argument='""%%1""' />
-              </Extension>
-            </ProgId>
-*)

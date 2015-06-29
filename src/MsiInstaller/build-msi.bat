@@ -1,14 +1,8 @@
 @if "%_echo%"=="" echo off
 setlocal
 
-if "%TOOLS%" == "" (
-    set TOOLS=c:\fsharp\rc1\tools
-)
 if "%WIX_HOME%" == "" (
-    set WIX_HOME=%TOOLS%\win86\wix-ms\3.0.4116.0\bin
-)
-if "%WIX_UI_PATH%" == "" (
-    set WIX_UI_PATH=%TOOLS%\win86\wix\WixUI_en-us.wxl
+    set WIX_HOME="C:\Program Files (x86)\WiX Toolset v3.7\bin"
 )
 if "%CYGWIN%" == "" (
     set CYGWIN=%TOOLS%\win86\cygwin
@@ -23,12 +17,12 @@ set PKZIP=%TOOLS%\win86\cygwin\zip.exe
 if "%MSIDUMP%" == "" (
     set MSIDUMP=%TOOLS%\win86\msidump\x86\msidump.exe
 )
-set tree=FSharpPowerPack-2.0.0.0
+set tree=FSharpPowerPack-4.0.0.0
 
 %FSI_TOOL% --quiet generateWixFileEntries.fsx  %tree%
 pushd %tree%
 %CANDLE%  -ext WixNetFxExtension ..\files.wxs ..\product.wxs
-%LIGHT%  -out ..\InstallFSharpPowerPack.msi -ext WixVsExtension -ext WixNetFxExtension  -ext WixUIExtension -loc %WIX_UI_PATH% product.wixobj files.wixobj
+%LIGHT%  -out ..\InstallFSharpPowerPack.msi -ext WixVsExtension -ext WixNetFxExtension  -ext WixUIExtension product.wixobj files.wixobj
 popd
 
 REM %CHMOD% u+rx LICENSE-fsharp.rtf
@@ -36,7 +30,7 @@ REM %CHMOD% u+rx LICENSE-fsharp.rtf
 
 REM # Build the zip at the same time, from the same files (note, no need to sign the zip%.
 del  FSharpPowerPack.zip
-%PKZIP% -@ FSharpPowerPack.zip < zip.args
+\bin\zip -@ FSharpPowerPack-4.0.0.0.zip < zip.args
 
 @echo off
 REM Process to sign the MSI

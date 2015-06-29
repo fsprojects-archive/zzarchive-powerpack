@@ -20,7 +20,4 @@ type FsLex =
     member OtherFlags : string with set
     member Unicode    : bool   with set
     member ToolPath   : string with set
-#if FX_ATLEAST_35   
-#else 
-    member ToolExe    : string with set    
-#endif
+    override ToolExe    : string with set    

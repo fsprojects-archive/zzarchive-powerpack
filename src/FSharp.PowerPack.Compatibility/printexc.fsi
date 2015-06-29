@@ -11,6 +11,9 @@
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Microsoft.FSharp.Compatibility.OCaml.Printexc
 
+#if FX_NO_STDIN
+#else
 val print: mapping:('a -> 'b) -> 'a -> 'b
+#endif
 val to_string: exn -> string
 

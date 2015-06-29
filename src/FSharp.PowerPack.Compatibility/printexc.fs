@@ -15,4 +15,7 @@ let to_string (e:exn) =
   | MatchFailureException(s,n,m) -> sprintf "match failure, file '%s', line %d, column %d" s n m
   | _ -> sprintf "%A\n" e
 
+#if FX_NO_STDIN
+#else
 let print f x = try f x with e -> stderr.WriteLine (to_string e) ; raise e 
+#endif

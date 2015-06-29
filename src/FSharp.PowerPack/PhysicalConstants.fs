@@ -2,7 +2,8 @@
 
 namespace Microsoft.FSharp.Math
 
-open Microsoft.FSharp.Math.SI
+open Microsoft.FSharp.Data.UnitSystems.SI.UnitNames
+open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 
 /// Fundamental physical constants, with units-of-measure
 // Selected from frequently used constants at http://physics.nist.gov/cuu/Constants/index.html

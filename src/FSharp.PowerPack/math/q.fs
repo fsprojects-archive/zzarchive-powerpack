@@ -1,4 +1,4 @@
-// (c) Microsoft Corporation. All rights reserved 
+// (c) Microsoft Corporation. Apache 2.0 License 
 
 #nowarn "44"  // OK to use the "compiler only" function RangeGeneric
 #nowarn "52"  // The value has been copied to ensure the original is not mutated by this operation
@@ -82,7 +82,47 @@ namespace Microsoft.FSharp.Math
         static member Rational  (p:int,q:int) = BigRationalLarge.Normalize (bigint p,bigint q)
         static member RationalZ (p,q) = BigRationalLarge.Normalize (p,q)
        
+
         static member Parse (str:string) =
+
+#if FX_NO_BIGINT_PARSE
+          let BigNatParse (str:string) =
+              // Would it be better to split string half and combine results? 
+              let len = str.Length
+              if System.String.IsNullOrEmpty str then invalidArg "str" "empty string";
+              let ten = BigInteger 10
+              let rec build acc i =
+                  if i=len then
+                    acc
+                  else
+                      let c = str.[i]
+                      let d = int c - int '0' 
+                      if 0 <= d && d <= 9 then
+                          build ((ten * acc) + (BigInteger d)) (i+1)
+                      else
+                          raise (new System.FormatException("The value could not be parsed"))
+       
+              build BigInteger.Zero 0
+
+          let BigIntParse(text:string) =
+              let len = text.Length 
+              if len = 0 then raise (new System.FormatException("The value could not be parsed"))
+              if text.[0..0] = "-" then
+                  BigInteger.Negate (BigNatParse text.[1..len-1])
+              else
+                  BigNatParse text
+          let len = str.Length 
+          if len=0 then invalidArg "str" "empty string";
+          let j = str.IndexOf '/' 
+          if j >= 0 then 
+              let p = BigIntParse (str.Substring(0,j)) 
+              let q = BigIntParse (str.Substring(j+1,len-j-1)) 
+              BigRationalLarge.RationalZ (p,q)
+          else
+              let p = BigIntParse str 
+              BigRationalLarge.RationalZ (p,OneI)
+#else
+        
           let len = str.Length 
           if len=0 then invalidArg "str" "empty string";
           let j = str.IndexOf '/' 
@@ -93,7 +133,8 @@ namespace Microsoft.FSharp.Math
           else
               let p = BigInteger.Parse str 
               BigRationalLarge.RationalZ (p,OneI)
-        
+#endif
+
         static member (~-) (Q(bp,bq))    = Q(-bp,bq)          // still coprime, bq >= 0 
         static member (+) (Q(ap,aq),Q(bp,bq)) = BigRationalLarge.Normalize ((ap * bq) + (bp * aq),aq * bq)
         static member (-) (Q(ap,aq),Q(bp,bq)) = BigRationalLarge.Normalize ((ap * bq) - (bp * aq),aq * bq)

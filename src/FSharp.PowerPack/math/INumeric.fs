@@ -232,7 +232,7 @@ module Instances =
 #if FX_ATLEAST_40
              BigInteger.Parse(s,numstyle,fmtprovider)
 #else
-             BigInteger.Parse(s)
+             BigRational.Parse(s) |> BigRational.ToBigInt
 #endif
 
       interface INormFloat<BigInteger> with  

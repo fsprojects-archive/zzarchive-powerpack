@@ -632,11 +632,11 @@ namespace Microsoft.FSharp.Math
             let index = Array.zeroCreate mA
             let temp = Array.create mA zero
             let ptr = new Dictionary<_,_>(11)
-            if debug then printf "start, #items in result = %d, #offsAcc = %d, mA = %d\n" jC.Count offsAcc.Length mA;
+            //if debug then printf "start, #items in result = %d, #offsAcc = %d, mA = %d\n" jC.Count offsAcc.Length mA;
 
             let mutable mlast = 0
             for i = 0 to mA-1 do
-                if debug then printf "i = %d, mlast = %d\n" i mlast;
+                //if debug then printf "i = %d, mlast = %d\n" i mlast;
                 offsAcc.[i] <- mlast
                 
                 let kmin1 = a.MinIndexForRow i
@@ -645,29 +645,29 @@ namespace Microsoft.FSharp.Math
                     let mutable itemp = 0
                     let mutable ptrNeedsClear = true // clear the ptr table on demand. 
                     for j = kmin1 to kmax1 - 1 do
-                        if debug then printf "  j = %d\n" j;
+                        //if debug then printf "  j = %d\n" j;
                         let ja_j = a.SparseColumnValues.[j]
                         let kmin2 = b.MinIndexForRow ja_j
                         let kmax2 = b.MaxIndexForRow ja_j
                         for k = kmin2 to kmax2 - 1 do
                             let jb_k = b.SparseColumnValues.[k]
-                            if debug then printf "    i = %d, j = %d, k = %d, ja_j = %d, jb_k = %d\n" i j k ja_j jb_k;
+                            //if debug then printf "    i = %d, j = %d, k = %d, ja_j = %d, jb_k = %d\n" i j k ja_j jb_k;
                             let va = a.SparseValues.[j] 
                             let vb = b.SparseValues.[k]
-                            if debug then printf "    va = %O, vb = %O\n" va vb;
+                            //if debug then printf "    va = %O, vb = %O\n" va vb;
                             let summand = mul va vb
-                            if debug then printf "    summand = %O\n" summand;
+                            //if debug then printf "    summand = %O\n" summand;
                             if ptrNeedsClear then (ptr.Clear();ptrNeedsClear <- false);
 
                             if not (ptr.ContainsKey(jb_k)) then
-                                if debug then printf "    starting entry %d\n" jb_k;
+                                //if debug then printf "    starting entry %d\n" jb_k;
                                 ptr.[jb_k] <- itemp
                                 let ptr_jb_k = itemp
                                 temp.[ptr_jb_k] <- summand
                                 index.[ptr_jb_k] <- jb_k
                                 itemp <- itemp + 1
                             else
-                                if debug then printf "    adding to entry %d\n" jb_k;
+                                //if debug then printf "    adding to entry %d\n" jb_k;
                                 let ptr_jb_k = ptr.[jb_k]
                                 temp.[ptr_jb_k] <- add temp.[ptr_jb_k] summand
                         done
@@ -679,14 +679,14 @@ namespace Microsoft.FSharp.Math
                         Array.sortInPlaceBy (fun (_,idx) -> idx) sorted
                         for s = 0 to itemp-1 do
                             let (v,idx) = sorted.[s]
-                            if debug then printf "  writing value %O at index %d to result matrix\n" v idx;
+                            //if debug then printf "  writing value %O at index %d to result matrix\n" v idx;
                             C.Add(v)
                             jC.Add(idx)
-                        if debug then printf " itemp = %d, mlast = %d\n" itemp mlast;
+                        //if debug then printf " itemp = %d, mlast = %d\n" itemp mlast;
                         mlast <- mlast + itemp 
             done
             offsAcc.[mA] <- mlast;
-            if debug then printf "done, #items in result = %d, #offsAcc = %d, mA = %d\n" jC.Count offsAcc.Length mA;
+            //if debug then printf "done, #items in result = %d, #offsAcc = %d, mA = %d\n" jC.Count offsAcc.Length mA;
             SparseMatrix(opsData = a.OpsData,
                          sparseRowOffsets=offsAcc,
                          ncols= nB,

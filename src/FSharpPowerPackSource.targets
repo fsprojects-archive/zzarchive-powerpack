@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(TargetFramework)' == 'Silverlight'">
-    <SilverlightVersion Condition="'$(SilverlightVersion)' == ''">v3.0</SilverlightVersion>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <SilverlightApplication>false</SilverlightApplication>
+    <SilverlightVersion Condition="'$(SilverlightVersion)' == ''">v5.0</SilverlightVersion>
   </PropertyGroup>
   <PropertyGroup>
     <LkgVersion>1.9.7.7</LkgVersion>
@@ -11,9 +13,9 @@
     <IntermediateOutputPath Condition="'$(TargetFramework)' == ''">obj\$(Configuration)</IntermediateOutputPath>    
     <IntermediateOutputPath Condition="'$(TargetFramework)' == 'Silverlight'">obj\$(TargetFramework)\$(SilverlightVersion)\$(Configuration)</IntermediateOutputPath>
     <FsLexToolPath>$(FSharpPowerPackSourcesRoot)\..\lkg\FSharp.PowerPack-$(LkgVersion)\bin</FsLexToolPath>
-    <FsLexToolExe>FsLex.exe</FsLexToolExe>
+    <FsLexToolExe>fslex.exe</FsLexToolExe>
     <FsYaccToolPath>$(FSharpPowerPackSourcesRoot)\..\lkg\FSharp.PowerPack-$(LkgVersion)\bin</FsYaccToolPath>
-    <FsYaccToolExe>FsYacc.exe</FsYaccToolExe>
+    <FsYaccToolExe>fsyacc.exe</FsYaccToolExe>
     
   </PropertyGroup>
 
@@ -23,14 +25,41 @@
     <OtherFlags Condition="Exists('$(FSharpPowerPackSourcesRoot)\fs.snk')">/keyfile:$(FSharpPowerPackSourcesRoot)\fs.snk $(OtherFlags)</OtherFlags>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'Silverlight'  ">  
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'Silverlight'  ">
     <OtherFlags Condition="Exists('$(FSharpPowerPackSourcesRoot)\fsSilverlight.snk') AND '$(StrongName)' != 'false'">/keyfile:$(FSharpPowerPackSourcesRoot)\fsSilverlight.snk $(OtherFlags)</OtherFlags>
-    <DefineConstants>$(DefineConstants);SILVERLIGHT;FX_NO_COMMAND_LINE_ARGS;FX_NO_CULTURE_INFO_ARGS;FX_NO_FILE_OPTIONS;FX_NO_FILESTREAM_ISASYNC;FX_NO_UTF32ENCODING;FX_NO_EXIT;FX_NO_DEFAULT_DEPENDENCY_TYPE;FX_NO_TO_LOWER_INVARIANT;FX_NO_DOUBLE_BIT_CONVERTER;FX_NO_TRUNCATE;FX_NO_ENVIRONMENT;FX_NO_PROCESS_START;FX_NO_PROCESS_DIAGNOSTICS;FX_NO_APP_DOMAINS;FX_NO_DEFAULT_ENCODING;FX_NO_NONBLOCK_IO;FX_NO_BINARY_SERIALIZATION;FX_NO_ASCII_ENCODING;FX_NO_FILEWRITEALL;FX_NO_WINDOWSFORMS;FX_NO_DEFAULT_DECIMAL_ROUND;FX_NO_ENCODER_FALLBACK</DefineConstants>
+    <DefineConstants>$(DefineConstants);SILVERLIGHT;</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_SET_CURRENT_DIRECTORY</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_BIGINT_PARSE</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_COMMAND_LINE_ARGS</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_CULTURE_INFO_ARGS</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_FILE_OPTIONS</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_FILESTREAM_ISASYNC</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_UTF32ENCODING</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_STDIN</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_EXIT</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_CONVERTER</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_DEFAULT_DEPENDENCY_TYPE</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_TO_LOWER_INVARIANT</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_DOUBLE_BIT_CONVERTER</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_TRUNCATE</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_ENVIRONMENT</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_PROCESS_START</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_PROCESS_DIAGNOSTICS</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_APP_DOMAINS</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_DEFAULT_ENCODING</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_NONBLOCK_IO</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_BINARY_SERIALIZATION</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_ASCII_ENCODING</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_FILEWRITEALL</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_WINDOWSFORMS</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_DEFAULT_DECIMAL_ROUND</DefineConstants>
+    <DefineConstants>$(DefineConstants);FX_NO_ENCODER_FALLBACK</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Condition="'$(TargetFramework)' == ''" Include="FSharp.Core" />
-    <Reference Condition="'$(TargetFramework)' == 'Silverlight' AND '$(SilverlightVersion)' == 'v4.0'" Include="System.Core" />
-    <Reference Condition="'$(TargetFramework)' == 'Silverlight'" Include="$(MSBuildExtensionsPath32)\..\Microsoft F#\Silverlight\Libraries\Client\$(SilverlightVersion)\FSharp.Core.dll"/>
+    <Reference Condition="'$(TargetFramework)' == ''" Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Condition="'$(TargetFramework)' == 'Silverlight' AND '$(SilverlightVersion)' == 'v5.0'" Include="System.Core" />
+    <Reference Condition="'$(TargetFramework)' == 'Silverlight' AND '$(SilverlightVersion)' == 'v5.0'" Include="System.Numerics" />
+    <Reference Condition="'$(TargetFramework)' == 'Silverlight'" Include="$(MSBuildExtensionsPath32)\..\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\.NETPortable\FSharp.Core.dll" />
   </ItemGroup>
 </Project>

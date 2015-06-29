@@ -29,13 +29,11 @@
 ..\..\Release\bin\fslex.exe bin
 ..\..\Release\bin\fsyacc.exe bin
 ..\FSharp.PowerPack.Build.Tasks\FSharp.PowerPack.targets bin
-..\..\Silverlight\v3.0\Release\bin\FSharp.PowerPack.dll Silverlight\v3.0
-..\..\Silverlight\v3.0\Release\bin\FSharp.PowerPack.pdb Silverlight\v3.0
-..\..\Silverlight\v3.0\Release\bin\FSharp.PowerPack.Compatibility.dll Silverlight\v3.0
-..\..\Silverlight\v3.0\Release\bin\FSharp.PowerPack.Compatibility.pdb Silverlight\v3.0
-..\..\Silverlight\v4.0\Release\bin\FSharp.PowerPack.dll Silverlight\v4.0
-..\..\Silverlight\v4.0\Release\bin\FSharp.PowerPack.pdb Silverlight\v4.0
-..\..\Silverlight\v4.0\Release\bin\FSharp.PowerPack.Compatibility.dll Silverlight\v4.0
-..\..\Silverlight\v4.0\Release\bin\FSharp.PowerPack.Compatibility.pdb Silverlight\v4.0
+..\..\Silverlight\v5.0\Release\bin\FSharp.PowerPack.dll Silverlight\v5.0
+..\..\Silverlight\v5.0\Release\bin\FSharp.PowerPack.pdb Silverlight\v5.0
+..\..\Silverlight\v5.0\Release\bin\FSharp.PowerPack.Linq.dll Silverlight\v5.0
+..\..\Silverlight\v5.0\Release\bin\FSharp.PowerPack.Linq.pdb Silverlight\v5.0
+..\..\Silverlight\v5.0\Release\bin\FSharp.PowerPack.Compatibility.dll Silverlight\v5.0
+..\..\Silverlight\v5.0\Release\bin\FSharp.PowerPack.Compatibility.pdb Silverlight\v5.0
 
 License.rtf .

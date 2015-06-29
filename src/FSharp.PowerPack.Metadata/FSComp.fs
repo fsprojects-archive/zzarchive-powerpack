@@ -2548,7 +2548,7 @@ type internal SR private() =
     /// Problem with codepage '%d': %s
     /// (Originally from C:\fsharp\staging\src\fsharp\FSComp.txt:868)
     static member optsProblemWithCodepage(a0 : System.Int32, a1 : System.String) = (1000, GetStringFunc("optsProblemWithCodepage",",,,%d,,,%s,,,") a0 a1)
-    /// Copyright (c) Microsoft Corporation. All Rights Reserved.
+    /// Copyright (c) Microsoft Corporation. Apache 2.0 License.
     /// (Originally from C:\fsharp\staging\src\fsharp\FSComp.txt:869)
     static member optsCopyright() = (GetStringFunc("optsCopyright",",,,") )
     /// Name of the output file (Short form: -o)

@@ -10,7 +10,6 @@ type public HashtblTests() =
     [<Test>]
     member this.BasicTests() = 
 
-            printf "I am running";
             let map1 = Hashtbl.create 5 in
             Hashtbl.add map1 5 5;
             Hashtbl.add map1 17 17;
@@ -33,7 +32,6 @@ type public HashtblTests() =
             check "21980d3" (Hashtbl.find_all map2 5) [5];    
             check "21980d3" (Hashtbl.find_all map2 17) [17];    
             check "21980d3" (Hashtbl.find_all map2 94) [94];    
-            printf "I am done"
 
     [<Test>]
     member this.NameResolutions() = 
@@ -53,7 +51,7 @@ type public HashtblTests() =
                 match tab.TryFind(c) with 
                 | None -> tab.Add(c,1)
                 | Some v -> tab.Replace(c,v+1)
-            tab |> Seq.iter (fun (KeyValue(c,v)) -> printf "Number of '%c' characters = %d\n" c v) 
+            tab |> Seq.iter (fun (KeyValue(c,v)) -> (* printf "Number of '%c' characters = %d\n" c v *) () ) 
           
         let SampleHashtbl1b() =
             let tab = Microsoft.FSharp.Collections.HashMultiMap<_,_>(30, HashIdentity.Structural) 
@@ -63,7 +61,7 @@ type public HashtblTests() =
                 match tab.TryFind(c) with 
                 | None -> tab.Add(c,1)
                 | Some v -> tab.Replace(c,v+1)
-            tab |> Seq.iter (fun (KeyValue(c,v)) -> printf "Number of '%c' characters = %d\n" c v) 
+            tab |> Seq.iter (fun (KeyValue(c,v)) -> (*printf "Number of '%c' characters = %d\n" c v *) () ) 
           
 
         let SampleHashtbl2() =
@@ -74,7 +72,7 @@ type public HashtblTests() =
                 match Hashtbl.tryfind tab c with 
                 | None -> Hashtbl.add tab c 1
                 | Some v -> Hashtbl.replace tab c (v+1)
-            Hashtbl.iter (fun c v -> printf "Number of '%c' characters = %d\n" c v) tab
+            Hashtbl.iter (fun c v -> (* printf "Number of '%c' characters = %d\n" c v *) () ) tab
           
           
         let x1 = new HashMultiMap<int,int>(10, HashIdentity.Structural)

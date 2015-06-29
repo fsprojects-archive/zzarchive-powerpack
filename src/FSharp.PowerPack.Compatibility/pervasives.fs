@@ -403,6 +403,8 @@ let set_binary_mode_out (os:out_channel) b =
     | TextW _ when b -> failwith "cannot set this stream to binary mode"
     | TextW _ -> ()
 
+#if FX_NO_STDIN
+#else
 let print_int (x:int)        = prim_output_int stdout x
 let print_float (x:float)    = prim_output_float stdout x
 let print_string (x:string)  = output_string stdout x
@@ -416,6 +418,7 @@ let prerr_string (x:string)  = output_string stderr x
 let prerr_newline ()         = prim_output_newline stderr
 let prerr_endline (x:string) = prerr_string x; prerr_newline ()
 let prerr_char (c:char)      = output_char stderr c
+#endif
 
 #if FX_NO_BINARY_SERIALIZATION
 #else
@@ -599,9 +602,12 @@ let set_binary_mode_in (is:in_channel) b =
     | TextR _ when b -> failwith "set_binary_mode_in: cannot set this stream to binary mode"
     | TextR _ -> ()
 
+#if FX_NO_STDIN
+#else
 let read_line ()  = stdout.Flush(); input_line stdin
 let read_int ()   = int_of_string (read_line())
 let read_float () = float_of_string (read_line ())
+#endif
 
 #if FX_NO_BINARY_SERIALIZATION
 #else

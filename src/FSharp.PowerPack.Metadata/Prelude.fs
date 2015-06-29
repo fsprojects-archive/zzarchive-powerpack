@@ -1,5 +1,5 @@
 ﻿
-// (c) Microsoft Corporation. All rights reserved
+// (c) Microsoft Corporation. Apache 2.0 License
 
 //---------------------------------------------------------------------------
 // This file contains definitions that mimic definitions from parts of the F#
